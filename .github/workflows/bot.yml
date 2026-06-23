@@ -65,6 +65,9 @@ jobs:
       - name: Strategy discovery (idempotent within day)
         run: python run.py discover || true
 
+      - name: Pattern mining (idempotent within day)
+        run: python run.py mine-patterns || true
+
       - name: Render static dashboard
         run: python dashboard.py --write
 
@@ -81,6 +84,9 @@ jobs:
           if [ -f predictions.jsonl ]; then git add -f predictions.jsonl; fi
           if [ -f discoveries.json ]; then git add -f discoveries.json; fi
           if [ -f discovery_log.jsonl ]; then git add -f discovery_log.jsonl; fi
+          if [ -f patterns.json ]; then git add -f patterns.json; fi
+          if [ -f pattern_log.jsonl ]; then git add -f pattern_log.jsonl; fi
+          git add -f settings.json
           if git diff --cached --quiet; then
             echo "no changes to commit"
           else

@@ -9,6 +9,7 @@ from .breakout_donchian import BreakoutDonchian
 from .momentum_ema_cross import MomentumEmaCross
 from .claude_pred import ClaudePred
 from .funding_arb import FundingArb
+from .pattern_driven import PatternDriven
 
 REGISTRY: dict[str, type[Strategy]] = {
     "nsigma_fade": NSigmaFade,
@@ -17,6 +18,17 @@ REGISTRY: dict[str, type[Strategy]] = {
     "claude_pred": ClaudePred,
     "funding_arb": FundingArb,
 }
+
+
+def _resolve_pattern(name: str) -> Strategy | None:
+    """Resolve 'pattern::<pattern_name>' to a PatternDriven instance."""
+    if not name.startswith("pattern::"):
+        return None
+    pname = name[len("pattern::"):]
+    from .. import patterns as _patterns
+    if _patterns.get_active_pattern(pname) is None:
+        return None
+    return PatternDriven(pattern_name=pname)
 
 
 def _resolve_variant(name: str) -> Strategy | None:
@@ -52,6 +64,9 @@ def get(name: str) -> Strategy:
     cls = REGISTRY.get(name)
     if cls is not None:
         return cls()
+    inst = _resolve_pattern(name)
+    if inst is not None:
+        return inst
     inst = _resolve_variant(name)
     if inst is not None:
         return inst

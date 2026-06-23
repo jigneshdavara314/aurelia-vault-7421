@@ -15,6 +15,7 @@ from btcbot import (
     data as data_mod,
     discover,
     indicators,
+    patterns,
     predictions,
     resolver,
     self_improve,
@@ -216,6 +217,31 @@ def cmd_discover(args) -> int:
     return 0
 
 
+def cmd_mine_patterns(args) -> int:
+    out = patterns.run()
+    print(json.dumps(out, indent=2, default=str))
+    return 0
+
+
+def cmd_patterns(args) -> int:
+    rows = patterns.list_patterns()
+    if not rows:
+        print("no patterns mined yet")
+        return 0
+    be = patterns._break_even_dir_prob()
+    print(f"{'name':<40} {'tier':<10} {'streak':>6} {'n':>5} {'WR':>6} {'WLB':>6} {'holdout':>7} {'PNL':>9}")
+    for r in rows[:40]:
+        wr = f"{(r['last_wr'] or 0)*100:5.1f}%" if r['last_wr'] is not None else "  -  "
+        wlb = f"{(r['last_wlb'] or 0)*100:5.1f}%" if r['last_wlb'] is not None else "  -  "
+        ho = "YES" if r.get('last_holds_out') else "no"
+        pnl = f"${r['last_net_pnl']:>7.2f}" if r['last_net_pnl'] is not None else "    -   "
+        print(f"{r['name']:<40} {r['tier']:<10} {r['pass_streak']:>6} "
+              f"{(r['last_n'] or 0):>5} {wr:>6} {wlb:>6} {ho:>7} {pnl}")
+    print(f"\nbreak-even win rate at ${patterns.COST_BPS}bps cost: {be*100:.1f}%")
+    print(f"auto-enable bar: WLB > {(be+patterns.EDGE_BUFFER)*100:.1f}% AND n>={patterns.MIN_N} AND holdout pass AND 2 consecutive runs")
+    return 0
+
+
 def cmd_variants(args) -> int:
     rows = discover.list_variants()
     if not rows:
@@ -279,6 +305,8 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("reconcile-live")
     sub.add_parser("discover")
     sub.add_parser("variants")
+    sub.add_parser("mine-patterns")
+    sub.add_parser("patterns")
 
     args = p.parse_args(argv)
     handlers = {
@@ -289,6 +317,7 @@ def main(argv: list[str] | None = None) -> int:
         "export-snapshots": cmd_export_snapshots, "backup": cmd_backup,
         "snapshot-day": cmd_snapshot_day, "reconcile-live": cmd_reconcile_live,
         "discover": cmd_discover, "variants": cmd_variants,
+        "mine-patterns": cmd_mine_patterns, "patterns": cmd_patterns,
     }
     try:
         return handlers[args.cmd](args)

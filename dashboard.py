@@ -7,7 +7,7 @@ from pathlib import Path
 
 from flask import Flask, jsonify, request
 
-from btcbot import bankroll, calibration, config, discover, self_improve, store
+from btcbot import bankroll, calibration, config, discover, patterns, self_improve, store
 
 app = Flask(__name__)
 
@@ -215,6 +215,45 @@ def _ladder_table(state: dict) -> str:
     """
 
 
+def _patterns_table(rows: list[dict]) -> str:
+    if not rows:
+        return ('<div class="note">Pattern miner has not produced a state file yet. '
+                'It runs once per day after the bot tick. '
+                'Locally you can force it with <code>python run.py mine-patterns</code>.</div>')
+    be = patterns._break_even_dir_prob()
+    body = []
+    for r in rows[:80]:
+        wr = (r['last_wr'] or 0) * 100
+        wlb = (r['last_wlb'] or 0) * 100
+        pnl = r['last_net_pnl'] or 0
+        ho = "yes" if r.get('last_holds_out') else "no"
+        tier = r['tier']
+        body.append(f"""
+        <tr>
+          <td>{html.escape(r['name'])}</td>
+          <td>{html.escape(r.get('family') or '')}</td>
+          <td class="{ 'pos' if r.get('side')=='LONG' else 'neg' }">{html.escape(r.get('side') or '')}</td>
+          <td><span class="pill tier-{html.escape(tier)}">{html.escape(tier)}</span></td>
+          <td>{r['pass_streak']}</td>
+          <td>{r.get('last_n') or 0}</td>
+          <td>{wr:.1f}%</td>
+          <td>{wlb:.1f}%</td>
+          <td>{ho}</td>
+          <td class="{_cls(pnl)}">{_money(pnl)}</td>
+        </tr>""")
+    return f"""
+      <div class="note">Pattern miner runs daily across 4 families (run-length, body-size, time-of-day, indicator-band).
+      Break-even direction probability at {patterns.COST_BPS}bps cost: <b>{be*100:.1f}%</b>.
+      A pattern auto-enables when Wilson lower bound &gt; {(be+patterns.EDGE_BUFFER)*100:.1f}% AND n&ge;{patterns.MIN_N}
+      AND it also holds on a 30-day out-of-sample window AND 2 consecutive daily runs agree.</div>
+      <table class="t">
+        <thead><tr><th>name</th><th>family</th><th>side</th><th>tier</th><th>streak</th><th>n</th>
+        <th>WR</th><th>WLB</th><th>holdout</th><th>net P&L</th></tr></thead>
+        <tbody>{''.join(body)}</tbody>
+      </table>
+    """
+
+
 def _discoveries_table(rows: list[dict]) -> str:
     if not rows:
         return '<div class="note">Discovery bot has not run yet. It runs once per day after the first daily cycle.</div>'
@@ -332,7 +371,7 @@ function showTab(name){
 }
 window.addEventListener('DOMContentLoaded',function(){
   const h=(location.hash||'#overview').slice(1);
-  showTab(['overview','open','settled','strategies','ladder','discover','gates'].includes(h)?h:'overview');
+  showTab(['overview','open','settled','strategies','ladder','discover','patterns','gates'].includes(h)?h:'overview');
   setTimeout(()=>location.reload(),60000);
 });
 """
@@ -369,11 +408,13 @@ def _gather() -> dict:
         ).fetchall()]
     equity = _equity_points(60)
     discoveries = discover.list_variants()
+    mined_patterns = patterns.list_patterns()
     return {
         "cfg": cfg, "summary": summary, "open_pos": open_pos,
         "by_strat": by_strat, "state": state, "settled": settled,
         "gate_fails": gate_fails, "equity": equity,
         "discoveries": discoveries,
+        "patterns": mined_patterns,
     }
 
 
@@ -486,6 +527,7 @@ def build_html() -> str:
   <button id="btn-strategies" onclick="showTab('strategies')">Strategies</button>
   <button id="btn-ladder" onclick="showTab('ladder')">Ladder</button>
   <button id="btn-discover" onclick="showTab('discover')">Discovery ({len(d['discoveries'])})</button>
+  <button id="btn-patterns" onclick="showTab('patterns')">Patterns ({len(d['patterns'])})</button>
   <button id="btn-gates" onclick="showTab('gates')">Gates</button>
 </nav>
 
@@ -503,6 +545,8 @@ def build_html() -> str:
 <div id="tab-ladder" class="tab"><div class="card"><h2>Self-improvement ladder</h2>{_ladder_table(d['state'])}</div></div>
 
 <div id="tab-discover" class="tab"><div class="card"><h2>Discovered strategy variants</h2>{_discoveries_table(d['discoveries'])}</div></div>
+
+<div id="tab-patterns" class="tab"><div class="card"><h2>Mined patterns (top 80 by Wilson lower bound)</h2>{_patterns_table(d['patterns'])}</div></div>
 
 <div id="tab-gates" class="tab"><div class="card"><h2>Recent gate failures (last 100)</h2>{_gate_failures_table(d['gate_fails'])}</div></div>
 
