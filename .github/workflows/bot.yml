@@ -2,7 +2,9 @@ name: btcbot tick
 
 on:
   schedule:
-    - cron: "*/15 * * * *"   # every 15 minutes (free on public repos)
+    - cron: "*/15 * * * *"   # every 15m. 3 ticks per 5m candle close — enough
+                             # to never miss a close, gated by already_open so
+                             # extra ticks within the same candle are no-ops.
   workflow_dispatch:        # allows manual "Run workflow" from the Actions tab
   push:
     branches: [main]
