@@ -1,0 +1,25 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.env
+
+# Local-only SQLite artefacts. trades.db itself IS committed so the
+# GitHub Actions cron preserves history across runs (same trick polybot
+# uses). Only the WAL/SHM sidecars are ignored.
+trades.db-wal
+trades.db-shm
+
+# Heavy historical data — regenerable from data.binance.vision
+data/
+backups/
+logs/
+
+# Local IDE
+.vscode/
+.idea/
+
+# Local-only outputs; bot regenerates when needed.
+predictions_todo.jsonl
+prompts/predict_direction.md.bak
