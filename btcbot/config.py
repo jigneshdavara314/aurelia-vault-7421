@@ -80,6 +80,7 @@ PROFILES: dict[str, StrategyConfig] = {
 @dataclass
 class GlobalConfig:
     mode: str = "PAPER"
+    exchange: str = "binanceus"
     symbol: str = "BTC/USDT"
     timeframe: str = "5m"
     daily_budget_usd: float = 200.0
@@ -127,6 +128,8 @@ def load(force: bool = False) -> GlobalConfig:
     s = _read_settings()
     cfg = GlobalConfig(
         mode=os.environ.get("MODE", "PAPER"),
+        exchange=os.environ.get("EXCHANGE", s.get("exchange", "binanceus")),
+        symbol=s.get("symbol", "BTC/USDT"),
         daily_budget_usd=float(s.get("daily_budget_usd", 200.0)),
         active_strategies=list(s.get("active_strategies", ["nsigma_fade"])),
         kelly_fraction=float(s.get("kelly_fraction", 0.25)),

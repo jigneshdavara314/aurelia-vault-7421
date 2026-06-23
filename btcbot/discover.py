@@ -118,7 +118,7 @@ def _instantiate(variant: Variant) -> Strategy:
 
 # === Backtest data ==========================================================
 def _fetch_history(symbol: str, timeframe: str, n_bars: int) -> pd.DataFrame:
-    ex = exchange.Exchange("binance")
+    ex = exchange.Exchange(config.load().exchange)
     chunks = []
     remaining = n_bars
     end_ts = None

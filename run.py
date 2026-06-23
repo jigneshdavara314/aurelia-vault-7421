@@ -110,7 +110,7 @@ def cmd_trade(args) -> int:
 
 def cmd_resolve(args) -> int:
     from btcbot import exchange as ex_mod
-    ex = ex_mod.Exchange("binance")
+    ex = ex_mod.Exchange(config.load().exchange)
     out = resolver.resolve_all_open(ex)
     for r in out:
         print(r)
@@ -165,7 +165,7 @@ def cmd_self_improve(args) -> int:
 def cmd_export_snapshots(args) -> int:
     from btcbot import exchange as ex_mod
     cfg = config.load()
-    ex = ex_mod.Exchange("binance")
+    ex = ex_mod.Exchange(config.load().exchange)
     n = int(args.n or 200)
     df = ex.fetch_recent_candles(cfg.symbol, cfg.timeframe, n + 300, drop_unclosed=True)
     spec = {

@@ -12,7 +12,7 @@ def tick_trade() -> None:
     import math
 
     gcfg = config.load(force=True)
-    ex = exchange.Exchange("binance")
+    ex = exchange.Exchange(gcfg.exchange)
     active = config.active_strategies()
     if not active:
         logging.info("no active strategies; skipping trade tick")
@@ -69,7 +69,8 @@ def tick_trade() -> None:
 
 def tick_resolve() -> None:
     from btcbot import exchange, resolver
-    ex = exchange.Exchange("binance")
+    gcfg = config.load(force=True)
+    ex = exchange.Exchange(gcfg.exchange)
     try:
         out = resolver.resolve_all_open(ex)
         for r in out:
