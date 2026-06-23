@@ -4,7 +4,6 @@ from typing import Any
 
 import numpy as np
 
-from .. import patterns
 from ..data import Snapshot
 from ..strategy import Signal, edge_after_cost, kelly_size
 from .base import Strategy
@@ -105,7 +104,8 @@ class PatternDriven(Strategy):
 
     def _load_record(self) -> dict[str, Any] | None:
         if self._record is None and self.pattern_name:
-            self._record = patterns.get_active_pattern(self.pattern_name)
+            from .. import patterns as _patterns
+            self._record = _patterns.get_active_pattern(self.pattern_name)
         return self._record
 
     def evaluate(self, snap: Snapshot, cfg, cost_bps: int) -> Signal | None:

@@ -13,10 +13,11 @@ class BreakoutDonchian(Strategy):
         "ema_50": {"fn": "ema", "args": {"n": 50}},
         "ema_200": {"fn": "ema", "args": {"n": 200}},
     }
-    BASE_PRED = 0.56
+    BASE_PRED = 0.53
     HORIZON_BARS = 24
     SL_ATR = 1.0
-    TP_ATR = 2.0
+    TP_ATR = 1.8
+    BREAKOUT_BUFFER = 0.001
 
     def evaluate(self, snap, cfg, cost_bps):
         ind = snap.indicators
@@ -24,9 +25,9 @@ class BreakoutDonchian(Strategy):
         donch_high = ind.get("donch_high_20")
         if atr_val is None or donch_high is None or atr_val <= 0:
             return None
-        if snap.regime not in {"trending_up", "mixed"}:
+        if snap.regime in {"trending_down"}:
             return None
-        if snap.close <= donch_high:
+        if snap.close <= donch_high * (1 - self.BREAKOUT_BUFFER):
             return None
         entry = snap.close
         sl = entry - self.SL_ATR * atr_val

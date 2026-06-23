@@ -42,9 +42,12 @@ def gate_min_edge(signal: Signal, scfg) -> GateResult:
 
 
 def gate_min_confidence(signal: Signal, scfg) -> GateResult:
-    if signal.pred_p_up is not None and signal.pred_p_up < scfg.min_confidence:
+    if signal.pred_p_up is None:
+        return PASS
+    p_side = signal.pred_p_up if signal.side == "LONG" else 1 - signal.pred_p_up
+    if p_side < scfg.min_confidence:
         return GateResult(False, "min_confidence",
-                          f"p_up={signal.pred_p_up:.3f} < {scfg.min_confidence}")
+                          f"p_side={p_side:.3f} < {scfg.min_confidence}")
     return PASS
 
 

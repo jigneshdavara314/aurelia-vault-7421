@@ -14,11 +14,11 @@ class NSigmaFade(Strategy):
         "ema_50": {"fn": "ema", "args": {"n": 50}},
         "ema_200": {"fn": "ema", "args": {"n": 200}},
     }
-    Z_THRESH = -1.5
-    SL_ATR = 0.7
+    Z_THRESH = 1.0
+    SL_ATR = 0.8
     TP_ATR = 1.2
     HORIZON_BARS = 12
-    BASE_PRED = 0.55
+    BASE_PRED = 0.53
 
     def evaluate(self, snap, cfg, cost_bps):
         ind = snap.indicators
@@ -28,16 +28,31 @@ class NSigmaFade(Strategy):
         atr_val = ind["atr_14"]
         if atr_val <= 0:
             return None
-        if snap.regime not in {"ranging", "mixed"}:
-            return None
-        if z >= self.Z_THRESH:
+        if snap.regime in {"trending_up"}:
+            side = "SHORT" if z >= self.Z_THRESH else None
+        elif snap.regime in {"trending_down"}:
+            side = "LONG" if z <= -self.Z_THRESH else None
+        else:
+            if z <= -self.Z_THRESH:
+                side = "LONG"
+            elif z >= self.Z_THRESH:
+                side = "SHORT"
+            else:
+                side = None
+        if side is None:
             return None
         entry = snap.close
-        sl = entry - self.SL_ATR * atr_val
-        tp = entry + self.TP_ATR * atr_val
-        if sl <= 0 or tp <= entry:
+        if side == "LONG":
+            sl = entry - self.SL_ATR * atr_val
+            tp = entry + self.TP_ATR * atr_val
+        else:
+            sl = entry + self.SL_ATR * atr_val
+            tp = entry - self.TP_ATR * atr_val
+        risk = abs(entry - sl)
+        reward = abs(tp - entry)
+        if risk <= 0 or reward <= 0:
             return None
-        b = (tp - entry) / (entry - sl)
+        b = reward / risk
         p = self.BASE_PRED
         edge = edge_after_cost(p, b, cost_bps)
         if edge < cfg.min_edge:
@@ -48,9 +63,10 @@ class NSigmaFade(Strategy):
         if size <= 0:
             return None
         return Signal(
-            snapshot=snap, strategy=self.name, side="LONG",
-            entry_price=entry, pred_p_up=p, edge=edge, size_usd=size,
+            snapshot=snap, strategy=self.name, side=side,
+            entry_price=entry, pred_p_up=p if side == "LONG" else 1 - p,
+            edge=edge, size_usd=size,
             tp_price=tp, sl_price=sl, horizon_bars=self.HORIZON_BARS,
-            reason=f"z={z:.2f} atr={atr_val:.2f}",
+            reason=f"z={z:.2f} regime={snap.regime}",
             estimator="rule",
         )

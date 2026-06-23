@@ -13,11 +13,11 @@ class MomentumEmaCross(Strategy):
         "ema_50": {"fn": "ema", "args": {"n": 50}},
         "ema_200": {"fn": "ema", "args": {"n": 200}},
     }
-    BASE_PRED = 0.55
+    BASE_PRED = 0.53
     HORIZON_BARS = 36
     SL_ATR = 1.2
-    TP_ATR = 3.0
-    PULLBACK_ATR = 1.0
+    TP_ATR = 2.5
+    PULLBACK_ATR = 2.0
 
     def evaluate(self, snap, cfg, cost_bps):
         ind = snap.indicators
@@ -28,11 +28,9 @@ class MomentumEmaCross(Strategy):
             return None
         if e50 <= e200:
             return None
-        if snap.regime != "trending_up":
+        if snap.regime in {"trending_down"}:
             return None
         if abs(snap.close - e50) > self.PULLBACK_ATR * atr_val:
-            return None
-        if snap.close < e50:
             return None
         entry = snap.close
         sl = entry - self.SL_ATR * atr_val
