@@ -13,6 +13,7 @@ from btcbot import (
     calibration,
     config,
     data as data_mod,
+    discover,
     indicators,
     predictions,
     resolver,
@@ -208,6 +209,29 @@ def cmd_reconcile_live(args) -> int:
     return 0
 
 
+def cmd_discover(args) -> int:
+    cfg = config.load()
+    out = discover.run(cfg.symbol, cfg.timeframe)
+    print(json.dumps(out, indent=2, default=str))
+    return 0
+
+
+def cmd_variants(args) -> int:
+    rows = discover.list_variants()
+    if not rows:
+        print("no variants discovered yet")
+        return 0
+    print(f"{'variant':<48} {'tier':<10} {'streak':>6} {'n':>5} {'WR':>6} {'WLB':>6} {'BE':>6} {'NET':>8}")
+    for r in rows:
+        wr = f"{(r['last_wr'] or 0)*100:5.1f}%" if r['last_wr'] is not None else "  -  "
+        wlb = f"{(r['last_wlb'] or 0)*100:5.1f}%" if r['last_wlb'] is not None else "  -  "
+        be = f"{(r['last_be'] or 0)*100:5.1f}%" if r['last_be'] is not None else "  -  "
+        net = f"${r['last_net']:>7.2f}" if r['last_net'] is not None else "    -   "
+        print(f"{r['variant']:<48} {r['tier']:<10} {r['pass_streak']:>6} "
+              f"{(r['last_n'] or 0):>5} {wr:>6} {wlb:>6} {be:>6} {net:>8}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     p = argparse.ArgumentParser(prog="btcbot")
@@ -253,6 +277,8 @@ def main(argv: list[str] | None = None) -> int:
     sp.add_argument("--day", default=None)
 
     sub.add_parser("reconcile-live")
+    sub.add_parser("discover")
+    sub.add_parser("variants")
 
     args = p.parse_args(argv)
     handlers = {
@@ -262,6 +288,7 @@ def main(argv: list[str] | None = None) -> int:
         "calibration": cmd_calibration, "self-improve": cmd_self_improve,
         "export-snapshots": cmd_export_snapshots, "backup": cmd_backup,
         "snapshot-day": cmd_snapshot_day, "reconcile-live": cmd_reconcile_live,
+        "discover": cmd_discover, "variants": cmd_variants,
     }
     try:
         return handlers[args.cmd](args)

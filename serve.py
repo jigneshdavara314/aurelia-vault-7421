@@ -80,11 +80,13 @@ def tick_resolve() -> None:
 
 def daily_jobs() -> None:
     import datetime as _dt
-    from btcbot import store, self_improve
+    from btcbot import store, self_improve, discover
+    cfg = config.load()
     try:
         day = _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%d")
         store.save_daily_snapshot(day, config.time_now_ms())
         self_improve.run(config.time_now_ms())
+        discover.run(cfg.symbol, cfg.timeframe)
     except Exception as exc:
         logging.error("daily jobs error: %s", exc)
 

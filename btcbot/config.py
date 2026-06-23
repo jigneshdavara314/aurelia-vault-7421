@@ -55,21 +55,24 @@ PROFILES: dict[str, StrategyConfig] = {
         min_edge=0.03,
         min_confidence=0.55,
         kelly_fraction=0.20,
-        max_position_usd=25.0,
+        max_position_usd=50.0,
+        bankroll_usd=333.0,
     ),
     "moderate": StrategyConfig(
         name="moderate",
         min_edge=0.02,
         min_confidence=0.53,
         kelly_fraction=0.25,
-        max_position_usd=50.0,
+        max_position_usd=80.0,
+        bankroll_usd=333.0,
     ),
     "aggressive": StrategyConfig(
         name="aggressive",
         min_edge=0.015,
         min_confidence=0.52,
         kelly_fraction=0.35,
-        max_position_usd=100.0,
+        max_position_usd=150.0,
+        bankroll_usd=333.0,
     ),
 }
 
@@ -86,7 +89,7 @@ class GlobalConfig:
     paper_fee_bps: int = 10
     max_open_positions: int = 20
     max_open_per_symbol: int = 3
-    initial_deposit: float = 500.0
+    initial_deposit: float = 1000.0
     profile: str = "moderate"
     active_strategies: list[str] = field(default_factory=lambda: ["nsigma_fade"])
     kelly_fraction: float = 0.25

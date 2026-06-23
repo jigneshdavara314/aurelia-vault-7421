@@ -7,7 +7,7 @@ from pathlib import Path
 
 from flask import Flask, jsonify, request
 
-from btcbot import bankroll, calibration, config, self_improve, store
+from btcbot import bankroll, calibration, config, discover, self_improve, store
 
 app = Flask(__name__)
 
@@ -215,6 +215,39 @@ def _ladder_table(state: dict) -> str:
     """
 
 
+def _discoveries_table(rows: list[dict]) -> str:
+    if not rows:
+        return '<div class="note">Discovery bot has not run yet. It runs once per day after the first daily cycle.</div>'
+    body = []
+    for r in rows[:60]:
+        wr = (r['last_wr'] or 0) * 100
+        wlb = (r['last_wlb'] or 0) * 100
+        be = (r['last_be'] or 0) * 100
+        net = r['last_net'] or 0
+        tier = r['tier']
+        body.append(f"""
+        <tr>
+          <td>{html.escape(r['variant'])}</td>
+          <td><span class="pill tier-{html.escape(tier)}">{html.escape(tier)}</span></td>
+          <td>{r['pass_streak']}</td>
+          <td>{r.get('last_n') or 0}</td>
+          <td>{wr:.1f}%</td>
+          <td>{wlb:.1f}%</td>
+          <td>{be:.1f}%</td>
+          <td class="{_cls(net)}">{_money(net)}</td>
+        </tr>""")
+    return f"""
+      <div class="note">Discovery bot sweeps ~60 parameter variants daily; only variants where
+        Wilson lower bound &gt; break-even + 2pp AND n&ge;30 AND 2 consecutive daily runs
+        agree get auto-promoted into the active roster.</div>
+      <table class="t">
+        <thead><tr><th>variant</th><th>tier</th><th>streak</th><th>n</th>
+        <th>WR</th><th>WLB</th><th>break-even</th><th>net P&L (30d)</th></tr></thead>
+        <tbody>{''.join(body)}</tbody>
+      </table>
+    """
+
+
 def _gate_failures_table(rows: list[dict]) -> str:
     if not rows:
         return '<div class="note">No gate failures recorded yet.</div>'
@@ -299,7 +332,7 @@ function showTab(name){
 }
 window.addEventListener('DOMContentLoaded',function(){
   const h=(location.hash||'#overview').slice(1);
-  showTab(['overview','open','settled','strategies','ladder','gates'].includes(h)?h:'overview');
+  showTab(['overview','open','settled','strategies','ladder','discover','gates'].includes(h)?h:'overview');
   setTimeout(()=>location.reload(),60000);
 });
 """
@@ -335,10 +368,12 @@ def _gather() -> dict:
             "SELECT * FROM gate_failures ORDER BY ts DESC LIMIT 100"
         ).fetchall()]
     equity = _equity_points(60)
+    discoveries = discover.list_variants()
     return {
         "cfg": cfg, "summary": summary, "open_pos": open_pos,
         "by_strat": by_strat, "state": state, "settled": settled,
         "gate_fails": gate_fails, "equity": equity,
+        "discoveries": discoveries,
     }
 
 
@@ -346,7 +381,13 @@ def build_html() -> str:
     d = _gather()
     cfg = d["cfg"]
     s = d["summary"]
-    deposit = s.get("initial_deposit", 500.0)
+    deposit = s.get("initial_deposit", 1000.0)
+    import json as _json
+    try:
+        _settings = _json.loads(config.SETTINGS_PATH.read_text(encoding="utf-8"))
+        deposit_date = _settings.get("deposit_date") or "today"
+    except Exception:
+        deposit_date = "today"
     free_balance = s.get("balance", 0)
     on_stake = s.get("open_exposure", 0)
     net_profit = s.get("profit", 0)
@@ -371,7 +412,7 @@ def build_html() -> str:
         <div class="ic-box">
           <div class="ic-lab">Invested</div>
           <div class="ic-val">${deposit:,.2f}</div>
-          <div class="ic-sub">paper capital</div>
+          <div class="ic-sub">on {html.escape(deposit_date)}</div>
         </div>
         <div class="ic-box">
           <div class="ic-lab">Net profit / loss</div>
@@ -444,6 +485,7 @@ def build_html() -> str:
   <button id="btn-settled" onclick="showTab('settled')">Settled ({len(d['settled'])})</button>
   <button id="btn-strategies" onclick="showTab('strategies')">Strategies</button>
   <button id="btn-ladder" onclick="showTab('ladder')">Ladder</button>
+  <button id="btn-discover" onclick="showTab('discover')">Discovery ({len(d['discoveries'])})</button>
   <button id="btn-gates" onclick="showTab('gates')">Gates</button>
 </nav>
 
@@ -459,6 +501,8 @@ def build_html() -> str:
 <div id="tab-strategies" class="tab"><div class="card"><h2>Per-strategy detail</h2>{_strategy_bars(by_strat)}</div></div>
 
 <div id="tab-ladder" class="tab"><div class="card"><h2>Self-improvement ladder</h2>{_ladder_table(d['state'])}</div></div>
+
+<div id="tab-discover" class="tab"><div class="card"><h2>Discovered strategy variants</h2>{_discoveries_table(d['discoveries'])}</div></div>
 
 <div id="tab-gates" class="tab"><div class="card"><h2>Recent gate failures (last 100)</h2>{_gate_failures_table(d['gate_fails'])}</div></div>
 
