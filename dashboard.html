@@ -53,12 +53,12 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
 </style>
 </head><body>
 <h1>btcbot <span class="badge">PAPER</span> </h1>
-<div class="sub">Generated 2026-06-23 18:22 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
+<div class="sub">Generated 2026-06-23 20:33 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
 
 <nav>
   <button id="btn-overview" onclick="showTab('overview')">Overview</button>
-  <button id="btn-open" onclick="showTab('open')">Open (1)</button>
-  <button id="btn-settled" onclick="showTab('settled')">Settled (1)</button>
+  <button id="btn-open" onclick="showTab('open')">Open (2)</button>
+  <button id="btn-settled" onclick="showTab('settled')">Settled (2)</button>
   <button id="btn-strategies" onclick="showTab('strategies')">Strategies</button>
   <button id="btn-ladder" onclick="showTab('ladder')">Ladder</button>
   <button id="btn-discover" onclick="showTab('discover')">Discovery (60)</button>
@@ -76,37 +76,37 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
         </div>
         <div class="ic-box">
           <div class="ic-lab">Net profit / loss</div>
-          <div class="ic-val neg">-$0.02</div>
-          <div class="ic-sub">-0.00% on deposit</div>
+          <div class="ic-val neg">-$0.10</div>
+          <div class="ic-sub">-0.01% on deposit</div>
         </div>
         <div class="ic-box">
           <div class="ic-lab">On stake</div>
-          <div class="ic-val">$18.04</div>
+          <div class="ic-val">$40.43</div>
           <div class="ic-sub">in open positions</div>
         </div>
         <div class="ic-box highlight">
           <div class="ic-lab">Net balance</div>
-          <div class="ic-val accent">$981.94</div>
+          <div class="ic-val accent">$959.47</div>
           <div class="ic-sub">free to deploy</div>
         </div>
       </div>
       <div class="ic-foot">
-        Total account value <b>$999.98</b>
-        &nbsp;=&nbsp; $981.94 free &nbsp;+&nbsp; $18.04 on stake
+        Total account value <b>$999.90</b>
+        &nbsp;=&nbsp; $959.47 free &nbsp;+&nbsp; $40.43 on stake
         &nbsp;·&nbsp; symbol <b>BTC/USDT</b> &nbsp;·&nbsp; timeframe <b>5m</b>
         &nbsp;·&nbsp; daily budget <b>$400.00</b>
-        &nbsp;·&nbsp; drawdown <b>0.00%</b>
+        &nbsp;·&nbsp; drawdown <b>0.01%</b>
       </div>
     </div>
     
 
     <div class="stats">
       <div class="stat"><div class="s-val pos">1</div><div class="s-lab">Won</div></div>
-      <div class="stat"><div class="s-val neg">0</div><div class="s-lab">Lost</div></div>
+      <div class="stat"><div class="s-val neg">1</div><div class="s-lab">Lost</div></div>
       <div class="stat"><div class="s-val">0</div><div class="s-lab">Timeout</div></div>
-      <div class="stat"><div class="s-val">100%</div><div class="s-lab">Win rate</div></div>
-      <div class="stat"><div class="s-val neg">-$0.02</div><div class="s-lab">Profit</div></div>
-      <div class="stat"><div class="s-val">1</div><div class="s-lab">Resolved</div></div>
+      <div class="stat"><div class="s-val">50%</div><div class="s-lab">Win rate</div></div>
+      <div class="stat"><div class="s-val neg">-$0.10</div><div class="s-lab">Profit</div></div>
+      <div class="stat"><div class="s-val">2</div><div class="s-lab">Resolved</div></div>
     </div>
     
 
@@ -121,14 +121,14 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
         
       <svg viewBox="0 0 130 130" class="donut">
         <circle cx="65.0" cy="65.0" r="48" fill="none" stroke="#30363d" stroke-width="12"/>
-        <circle cx="65.0" cy="65.0" r="48" fill="none" stroke="#3fb950" stroke-width="12"
-          stroke-dasharray="301.6 301.6" stroke-linecap="round"
+        <circle cx="65.0" cy="65.0" r="48" fill="none" stroke="#d8a23b" stroke-width="12"
+          stroke-dasharray="150.8 301.6" stroke-linecap="round"
           transform="rotate(-90 65.0 65.0)"/>
-        <text x="65.0" y="63.0" text-anchor="middle" class="donut-pct">100%</text>
-        <text x="65.0" y="81.0" text-anchor="middle" class="donut-lab">1/1</text>
+        <text x="65.0" y="63.0" text-anchor="middle" class="donut-pct">50%</text>
+        <text x="65.0" y="81.0" text-anchor="middle" class="donut-lab">1/2</text>
       </svg>
     
-        <div class="donut-n">1 resolved trades</div>
+        <div class="donut-n">2 resolved trades</div>
       </div>
     </div>
     <div class="card">
@@ -136,9 +136,9 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
       <div class="bars">
           <div class="bar-row">
             <div class="bar-name">nsigma_fade</div>
-            <div class="bar-track"><div class="bar-fill" style="width:100%;background:#3fb950"></div></div>
-            <div class="bar-val">100% <span class="bar-sub">(1–0)</span></div>
-            <div class="bar-pnl neg">-$0.02</div>
+            <div class="bar-track"><div class="bar-fill" style="width:50%;background:#d8a23b"></div></div>
+            <div class="bar-val">50% <span class="bar-sub">(1–1)</span></div>
+            <div class="bar-pnl neg">-$0.10</div>
           </div>
           <div class="bar-row">
             <div class="bar-name">breakout_donchian</div>
@@ -173,16 +173,28 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <th>entry</th><th>size</th><th>tp</th><th>sl</th><th>regime</th><th>opened</th></tr></thead>
         <tbody>
         <tr>
-          <td>2</td>
+          <td>3</td>
           <td>nsigma_fade</td>
+          <td class="neg">SHORT</td>
+          <td>BTC/USDT</td>
+          <td>$62,471.98</td>
+          <td>$18.04</td>
+          <td>$62,422.81</td>
+          <td>$62,556.84</td>
+          <td>ranging</td>
+          <td>2026-06-23 20:25</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>breakout_donchian</td>
           <td class="pos">LONG</td>
           <td>BTC/USDT</td>
-          <td>$62,392.22</td>
-          <td>$18.04</td>
-          <td>$62,466.33</td>
-          <td>$62,290.85</td>
-          <td>trending_down</td>
-          <td>2026-06-23 18:15</td>
+          <td>$62,534.48</td>
+          <td>$22.39</td>
+          <td>$62,623.85</td>
+          <td>$62,436.22</td>
+          <td>ranging</td>
+          <td>2026-06-23 20:25</td>
         </tr></tbody>
       </table>
     </div></div>
@@ -193,6 +205,18 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <th>entry</th><th>exit</th><th>via</th><th>pnl</th><th>status</th>
           <th>opened</th><th>closed</th></tr></thead>
         <tbody>
+        <tr>
+          <td>2</td>
+          <td>nsigma_fade</td>
+          <td class="pos">LONG</td>
+          <td>$62,392.22</td>
+          <td>$62,290.85</td>
+          <td>SL</td>
+          <td class="neg">-$0.08</td>
+          <td>LOST</td>
+          <td>2026-06-23 18:15</td>
+          <td>2026-06-23 18:30</td>
+        </tr>
         <tr>
           <td>1</td>
           <td>nsigma_fade</td>
@@ -211,9 +235,9 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
 <div id="tab-strategies" class="tab"><div class="card"><h2>Per-strategy detail</h2><div class="bars">
           <div class="bar-row">
             <div class="bar-name">nsigma_fade</div>
-            <div class="bar-track"><div class="bar-fill" style="width:100%;background:#3fb950"></div></div>
-            <div class="bar-val">100% <span class="bar-sub">(1–0)</span></div>
-            <div class="bar-pnl neg">-$0.02</div>
+            <div class="bar-track"><div class="bar-fill" style="width:50%;background:#d8a23b"></div></div>
+            <div class="bar-val">50% <span class="bar-sub">(1–1)</span></div>
+            <div class="bar-pnl neg">-$0.10</div>
           </div>
           <div class="bar-row">
             <div class="bar-name">breakout_donchian</div>
@@ -253,6 +277,15 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>100.0%</td>
           <td>20.7%</td>
           <td>100.0%</td>
+        </tr>
+        <tr>
+          <td>nsigma_fade|trending_down|LONG</td>
+          <td><span class="pill tier-trial">trial</span></td>
+          <td>0</td>
+          <td>1</td>
+          <td>0.0%</td>
+          <td>0.0%</td>
+          <td>79.3%</td>
         </tr></tbody>
       </table>
     </div></div>
