@@ -53,7 +53,7 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
 </style>
 </head><body>
 <h1>btcbot <span class="badge">PAPER</span> </h1>
-<div class="sub">Generated 2026-06-23 16:25 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
+<div class="sub">Generated 2026-06-23 16:29 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
 
 <nav>
   <button id="btn-overview" onclick="showTab('overview')">Overview</button>
@@ -1806,7 +1806,19 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
       </table>
     </div></div>
 
-<div id="tab-gates" class="tab"><div class="card"><h2>Recent gate failures (last 100)</h2><div class="note">No gate failures recorded yet.</div></div></div>
+<div id="tab-gates" class="tab"><div class="card"><h2>Recent gate failures (last 100)</h2>
+      <table class="t">
+        <thead><tr><th>when</th><th>strategy</th><th>symbol</th><th>gate</th><th>reason</th></tr></thead>
+        <tbody>
+        <tr>
+          <td>2026-06-23 16:29</td>
+          <td>nsigma_fade</td>
+          <td>BTC/USDT</td>
+          <td>already_open</td>
+          <td>duplicate</td>
+        </tr></tbody>
+      </table>
+    </div></div>
 
 <script>
 function showTab(name){
