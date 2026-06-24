@@ -14,6 +14,7 @@ from btcbot import (
     config,
     data as data_mod,
     discover,
+    edge_report,
     indicators,
     patterns,
     predictions,
@@ -217,6 +218,27 @@ def cmd_discover(args) -> int:
     return 0
 
 
+def cmd_edge_report(args) -> int:
+    since_days = int((args.since or "30d").rstrip("d"))
+    rep = edge_report.report(since_days=since_days)
+    md = edge_report.render_markdown(rep)
+    print(md)
+    if args.json:
+        out = config.ROOT / "edge_report.json"
+        out.write_text(json.dumps(rep, indent=2, default=str), encoding="utf-8")
+        print(f"\nJSON: {out}")
+    return 0
+
+
+def cmd_daily_report(args) -> int:
+    p = edge_report.write_daily_snapshot()
+    if p is None:
+        print("no deposit_date set; cannot compute day number")
+        return 1
+    print(f"wrote {p}")
+    return 0
+
+
 def cmd_mine_patterns(args) -> int:
     out = patterns.run()
     print(json.dumps(out, indent=2, default=str))
@@ -307,6 +329,10 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("variants")
     sub.add_parser("mine-patterns")
     sub.add_parser("patterns")
+    sp = sub.add_parser("edge-report")
+    sp.add_argument("--since", default="30d")
+    sp.add_argument("--json", action="store_true")
+    sub.add_parser("daily-report")
 
     args = p.parse_args(argv)
     handlers = {
@@ -318,6 +344,7 @@ def main(argv: list[str] | None = None) -> int:
         "snapshot-day": cmd_snapshot_day, "reconcile-live": cmd_reconcile_live,
         "discover": cmd_discover, "variants": cmd_variants,
         "mine-patterns": cmd_mine_patterns, "patterns": cmd_patterns,
+        "edge-report": cmd_edge_report, "daily-report": cmd_daily_report,
     }
     try:
         return handlers[args.cmd](args)

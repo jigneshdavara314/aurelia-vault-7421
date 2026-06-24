@@ -7,7 +7,7 @@ from pathlib import Path
 
 from flask import Flask, jsonify, request
 
-from btcbot import bankroll, calibration, config, discover, patterns, self_improve, store
+from btcbot import bankroll, calibration, config, discover, edge_report, patterns, self_improve, store
 
 app = Flask(__name__)
 
@@ -215,6 +215,65 @@ def _ladder_table(state: dict) -> str:
     """
 
 
+def _edge_panel(rep: dict) -> str:
+    t = rep["total"]
+    winners = rep.get("winners") or []
+    losers = rep.get("losers") or []
+    by_strategy = rep.get("by_strategy") or []
+
+    def _row(r: dict) -> str:
+        pnl_cls = "pos" if r["net_pnl"] > 0 else ("neg" if r["net_pnl"] < 0 else "")
+        return f"""<tr>
+          <td>{html.escape(r['key'])}</td>
+          <td>{r['n']}</td>
+          <td>{r['win_rate']*100:.1f}%</td>
+          <td>{r['wilson_lower']*100:.1f}%</td>
+          <td class="{pnl_cls}">{_money(r['net_pnl'])}</td>
+          <td>{r['roi_pct']*100:+.2f}%</td>
+          <td>${r['deployed']:,.2f}</td>
+        </tr>"""
+
+    win_rows = "".join(_row(r) for r in winners) or '<tr><td colspan="7" class="note">no winners yet</td></tr>'
+    lose_rows = "".join(_row(r) for r in losers) or '<tr><td colspan="7" class="note">no losers yet</td></tr>'
+    strat_rows = "".join(_row(r) for r in by_strategy) or '<tr><td colspan="7" class="note">no settled trades yet</td></tr>'
+
+    pnl_cls = "pos" if t["net_pnl"] > 0 else ("neg" if t["net_pnl"] < 0 else "")
+    return f"""
+    <div class="card">
+      <h2>Bottom line</h2>
+      <div class="kv">
+        <b>Trades resolved</b><div>{t['n']} (open: {t['open']})</div>
+        <b>Win rate</b><div>{t['win_rate']*100:.1f}% (95% CI: {t['wilson_lower']*100:.1f}% – {t['wilson_upper']*100:.1f}%)</div>
+        <b>Net P&L</b><div class="{pnl_cls}"><b>{_money(t['net_pnl'])}</b></div>
+        <b>Capital deployed</b><div>${t['deployed']:,.2f}</div>
+        <b>ROI</b><div class="{pnl_cls}">{t['roi_pct']*100:+.2f}%</div>
+        <b>Fees+slip paid</b><div>${t['fee_paid']:,.2f}</div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🏆 Winners — what's actually making money (≥5 trades)</h2>
+      <table class="t">
+        <thead><tr><th>key</th><th>n</th><th>WR</th><th>WLB</th><th>net P&L</th><th>ROI</th><th>deployed</th></tr></thead>
+        <tbody>{win_rows}</tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>❌ Losers — what's bleeding (≥5 trades)</h2>
+      <table class="t">
+        <thead><tr><th>key</th><th>n</th><th>WR</th><th>WLB</th><th>net P&L</th><th>ROI</th><th>deployed</th></tr></thead>
+        <tbody>{lose_rows}</tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>By strategy (all)</h2>
+      <table class="t">
+        <thead><tr><th>strategy</th><th>n</th><th>WR</th><th>WLB</th><th>net P&L</th><th>ROI</th><th>deployed</th></tr></thead>
+        <tbody>{strat_rows}</tbody>
+      </table>
+    </div>
+    """
+
+
 def _patterns_table(rows: list[dict]) -> str:
     if not rows:
         return ('<div class="note">Pattern miner has not produced a state file yet. '
@@ -344,6 +403,8 @@ h2{margin:24px 0 12px 0;font-size:15px;color:var(--mute);font-weight:600;letter-
 .bar-name{color:var(--ink)}.bar-track{height:8px;background:#21262d;border-radius:4px;overflow:hidden}
 .bar-fill{height:100%;border-radius:4px}.bar-val{font-size:13px}.bar-sub{color:var(--mute);font-size:11px}
 .bar-pnl{text-align:right;font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:180px 1fr;gap:8px;font-size:14px}
+.kv b{color:var(--mute);font-weight:500}
 table.t{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
 table.t th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--brd);color:var(--mute);font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:10px}
 table.t td{padding:8px 10px;border-bottom:1px solid #21262d}
@@ -371,7 +432,7 @@ function showTab(name){
 }
 window.addEventListener('DOMContentLoaded',function(){
   const h=(location.hash||'#overview').slice(1);
-  showTab(['overview','open','settled','strategies','ladder','discover','patterns','gates'].includes(h)?h:'overview');
+  showTab(['overview','edge','open','settled','strategies','ladder','discover','patterns','gates'].includes(h)?h:'overview');
   setTimeout(()=>location.reload(),60000);
 });
 """
@@ -409,12 +470,14 @@ def _gather() -> dict:
     equity = _equity_points(60)
     discoveries = discover.list_variants()
     mined_patterns = patterns.list_patterns()
+    rep = edge_report.report(since_days=30)
     return {
         "cfg": cfg, "summary": summary, "open_pos": open_pos,
         "by_strat": by_strat, "state": state, "settled": settled,
         "gate_fails": gate_fails, "equity": equity,
         "discoveries": discoveries,
         "patterns": mined_patterns,
+        "edge_report": rep,
     }
 
 
@@ -522,6 +585,7 @@ def build_html() -> str:
 
 <nav>
   <button id="btn-overview" onclick="showTab('overview')">Overview</button>
+  <button id="btn-edge" onclick="showTab('edge')">📊 Edge report</button>
   <button id="btn-open" onclick="showTab('open')">Open ({len(d['open_pos'])})</button>
   <button id="btn-settled" onclick="showTab('settled')">Settled ({len(d['settled'])})</button>
   <button id="btn-strategies" onclick="showTab('strategies')">Strategies</button>
@@ -535,6 +599,8 @@ def build_html() -> str:
 {stats}
 
 <div id="tab-overview" class="tab">{overview_panel}</div>
+
+<div id="tab-edge" class="tab">{_edge_panel(d['edge_report'])}</div>
 
 <div id="tab-open" class="tab"><div class="card"><h2>Open positions</h2>{_open_table(d['open_pos'])}</div></div>
 

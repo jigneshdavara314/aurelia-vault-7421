@@ -158,6 +158,19 @@ def is_live_enabled() -> bool:
     return bool(_read_settings().get("live_enabled", False))
 
 
+def sizing_mode() -> str:
+    """'fixed' = use fixed_size_usd per trade. 'kelly' = use Kelly criterion."""
+    return _read_settings().get("sizing_mode", "kelly")
+
+
+def fixed_size_usd() -> float:
+    return float(_read_settings().get("fixed_size_usd", 20.0))
+
+
+def daily_target_usd() -> float:
+    return float(_read_settings().get("daily_target_usd", 100.0))
+
+
 def time_now_ms() -> int:
     return int(time.time() * 1000)
 

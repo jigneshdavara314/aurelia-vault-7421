@@ -41,8 +41,19 @@ class Signal:
 
 
 def kelly_size(p: float, b: float, cfg: StrategyConfig) -> float:
+    """Position size. Reads sizing_mode from settings.json each call:
+      - 'fixed': return min(fixed_size_usd, bankroll, max_position_usd) when edge>0,
+        ignoring Kelly. Lets the operator deploy a target $-per-trade regardless
+        of edge magnitude (which is razor-thin on BTC 5m).
+      - 'kelly' (default): classic fractional Kelly.
+    In BOTH modes, edge must already be positive (caller's edge gate handled
+    that); this function just sizes the position once a trade is wanted."""
+    from . import config as _cfg
     if b <= 0 or not (0 < p < 1):
         return 0.0
+    if _cfg.sizing_mode() == "fixed":
+        stake = _cfg.fixed_size_usd()
+        return round(min(stake, cfg.bankroll_usd, cfg.max_position_usd), 2)
     q = 1 - p
     f = (b * p - q) / b
     f = max(0.0, f) * cfg.kelly_fraction

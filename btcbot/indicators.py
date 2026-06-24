@@ -74,6 +74,37 @@ def volume_zscore(df: pd.DataFrame, n: int = 288) -> pd.Series:
     return (v - m) / sd.replace(0, np.nan)
 
 
+def _directional_movement(df: pd.DataFrame, n: int = 14) -> tuple[pd.Series, pd.Series, pd.Series]:
+    h, l, c = df["high"], df["low"], df["close"]
+    up = h.diff()
+    dn = -l.diff()
+    plus_dm = pd.Series(np.where((up > dn) & (up > 0), up, 0.0), index=df.index)
+    minus_dm = pd.Series(np.where((dn > up) & (dn > 0), dn, 0.0), index=df.index)
+    pc = c.shift(1)
+    tr = pd.concat([(h - l).abs(), (h - pc).abs(), (l - pc).abs()], axis=1).max(axis=1)
+    atr_n = tr.ewm(alpha=1 / n, adjust=False, min_periods=n).mean()
+    plus_di = 100 * plus_dm.ewm(alpha=1 / n, adjust=False, min_periods=n).mean() / atr_n.replace(0, np.nan)
+    minus_di = 100 * minus_dm.ewm(alpha=1 / n, adjust=False, min_periods=n).mean() / atr_n.replace(0, np.nan)
+    dx = 100 * (plus_di - minus_di).abs() / (plus_di + minus_di).replace(0, np.nan)
+    adx = dx.ewm(alpha=1 / n, adjust=False, min_periods=n).mean()
+    return adx, plus_di, minus_di
+
+
+def adx(df: pd.DataFrame, n: int = 14) -> pd.Series:
+    a, _, _ = _directional_movement(df, n)
+    return a
+
+
+def plus_di(df: pd.DataFrame, n: int = 14) -> pd.Series:
+    _, p, _ = _directional_movement(df, n)
+    return p
+
+
+def minus_di(df: pd.DataFrame, n: int = 14) -> pd.Series:
+    _, _, m = _directional_movement(df, n)
+    return m
+
+
 _REGISTRY: dict[str, Callable] = {
     "ema": lambda df, n: ema(df["close"], n),
     "sma": lambda df, n: sma(df["close"], n),
@@ -82,6 +113,9 @@ _REGISTRY: dict[str, Callable] = {
     "zscore": lambda df, n=20: zscore(df["close"], n),
     "realized_vol": lambda df, n=288: realized_vol(df["close"], n),
     "volume_zscore": lambda df, n=288: volume_zscore(df, n),
+    "adx": lambda df, n=14: adx(df, n),
+    "plus_di": lambda df, n=14: plus_di(df, n),
+    "minus_di": lambda df, n=14: minus_di(df, n),
 }
 
 
