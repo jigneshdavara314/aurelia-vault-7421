@@ -1,22 +1,22 @@
 {
-  "as_of": "2026-06-24T12:06:50.519250+00:00",
+  "as_of": "2026-06-24T15:08:09.912828+00:00",
   "since_days": 1,
   "total": {
     "key": "ALL",
-    "n": 4,
-    "wins": 0,
+    "n": 5,
+    "wins": 1,
     "losses": 4,
     "timeouts": 0,
     "open": 1,
-    "net_pnl": -0.32,
-    "gross_pnl": -0.08,
-    "fee_paid": 0.24,
-    "deployed": 100.0,
-    "win_rate": 0.0,
-    "wilson_lower": 0.0,
-    "wilson_upper": 0.4899,
-    "avg_pnl": -0.08,
-    "roi_pct": -0.0032
+    "net_pnl": -0.36,
+    "gross_pnl": -0.06,
+    "fee_paid": 0.3,
+    "deployed": 120.0,
+    "win_rate": 0.2,
+    "wilson_lower": 0.0362,
+    "wilson_upper": 0.6245,
+    "avg_pnl": -0.07,
+    "roi_pct": -0.003
   },
   "by_strategy": [
     {
@@ -38,27 +38,27 @@
     },
     {
       "key": "nsigma_fade",
-      "n": 3,
-      "wins": 0,
+      "n": 4,
+      "wins": 1,
       "losses": 3,
       "timeouts": 0,
       "open": 1,
-      "net_pnl": -0.24,
-      "gross_pnl": -0.06,
-      "fee_paid": 0.18,
-      "deployed": 80.0,
-      "win_rate": 0.0,
-      "wilson_lower": 0.0,
-      "wilson_upper": 0.5615,
-      "avg_pnl": -0.08,
-      "roi_pct": -0.003
+      "net_pnl": -0.27,
+      "gross_pnl": -0.03,
+      "fee_paid": 0.24,
+      "deployed": 100.0,
+      "win_rate": 0.25,
+      "wilson_lower": 0.0456,
+      "wilson_upper": 0.6994,
+      "avg_pnl": -0.07,
+      "roi_pct": -0.0027
     }
   ],
   "by_pattern": [],
   "by_variant": [],
   "by_regime": [
     {
-      "key": "mixed",
+      "key": "high_vol",
       "n": 0,
       "wins": 0,
       "losses": 0,
@@ -73,6 +73,23 @@
       "wilson_upper": 0.0,
       "avg_pnl": 0.0,
       "roi_pct": 0.0
+    },
+    {
+      "key": "mixed",
+      "n": 1,
+      "wins": 1,
+      "losses": 0,
+      "timeouts": 0,
+      "open": 0,
+      "net_pnl": -0.03,
+      "gross_pnl": 0.03,
+      "fee_paid": 0.06,
+      "deployed": 20.0,
+      "win_rate": 1.0,
+      "wilson_lower": 0.2065,
+      "wilson_upper": 1.0,
+      "avg_pnl": -0.03,
+      "roi_pct": -0.0016
     },
     {
       "key": "ranging",
@@ -95,42 +112,23 @@
   "by_side": [
     {
       "key": "SHORT",
-      "n": 0,
-      "wins": 0,
+      "n": 1,
+      "wins": 1,
       "losses": 0,
       "timeouts": 0,
-      "open": 1,
-      "net_pnl": 0.0,
-      "gross_pnl": 0.0,
-      "fee_paid": 0.0,
+      "open": 0,
+      "net_pnl": -0.03,
+      "gross_pnl": 0.03,
+      "fee_paid": 0.06,
       "deployed": 20.0,
-      "win_rate": 0.0,
-      "wilson_lower": 0.0,
-      "wilson_upper": 0.0,
-      "avg_pnl": 0.0,
-      "roi_pct": 0.0
+      "win_rate": 1.0,
+      "wilson_lower": 0.2065,
+      "wilson_upper": 1.0,
+      "avg_pnl": -0.03,
+      "roi_pct": -0.0016
     },
     {
       "key": "LONG",
-      "n": 4,
-      "wins": 0,
-      "losses": 4,
-      "timeouts": 0,
-      "open": 0,
-      "net_pnl": -0.32,
-      "gross_pnl": -0.08,
-      "fee_paid": 0.24,
-      "deployed": 80.0,
-      "win_rate": 0.0,
-      "wilson_lower": 0.0,
-      "wilson_upper": 0.4899,
-      "avg_pnl": -0.08,
-      "roi_pct": -0.0041
-    }
-  ],
-  "by_day": [
-    {
-      "key": "2026-06-24",
       "n": 4,
       "wins": 0,
       "losses": 4,
@@ -145,6 +143,25 @@
       "wilson_upper": 0.4899,
       "avg_pnl": -0.08,
       "roi_pct": -0.0032
+    }
+  ],
+  "by_day": [
+    {
+      "key": "2026-06-24",
+      "n": 5,
+      "wins": 1,
+      "losses": 4,
+      "timeouts": 0,
+      "open": 1,
+      "net_pnl": -0.36,
+      "gross_pnl": -0.06,
+      "fee_paid": 0.3,
+      "deployed": 120.0,
+      "win_rate": 0.2,
+      "wilson_lower": 0.0362,
+      "wilson_upper": 0.6245,
+      "avg_pnl": -0.07,
+      "roi_pct": -0.003
     }
   ],
   "winners": [],
