@@ -114,9 +114,11 @@ def _classify_outcomes(df: pd.DataFrame, idx: np.ndarray, side: str,
 
 # ---- family 1: run-length (N consecutive ups/downs -> what next?) ----------
 def mine_run_length(df: pd.DataFrame) -> list[PatternHit]:
+    """Sweep N=3..12 consecutive ups/downs. Longer streaks are rarer but
+    historically have shown stronger mean-reversion edge on BTC at higher tf."""
     sign = np.sign(df["close"].diff().fillna(0).to_numpy())
     out: list[PatternHit] = []
-    for run_len in (3, 4, 5, 6, 7, 8):
+    for run_len in (3, 4, 5, 6, 7, 8, 9, 10, 12):
         for direction in (1, -1):
             mask = np.zeros(len(df), dtype=bool)
             for i in range(run_len, len(df)):
@@ -372,17 +374,20 @@ def mine_volume_spike(df: pd.DataFrame) -> list[PatternHit]:
 
 # ---- family 8: MA-distance regime ------------------------------------------
 def mine_ma_distance(df: pd.DataFrame) -> list[PatternHit]:
+    """Sweep MA windows {10,20,30,50,80,100,200} with finer 9-bucket distance
+    bands. Found to be the most fruitful family on initial 996-pattern scan,
+    so expanding the parameter space."""
     out: list[PatternHit] = []
-    for w in (20, 50, 200):
+    edges = [-0.05, -0.025, -0.012, -0.006, -0.002, 0.002, 0.006, 0.012, 0.025, 0.05]
+    for w in (10, 20, 30, 50, 80, 100, 200):
         ma = df["close"].rolling(w, min_periods=w).mean()
         dist = ((df["close"] - ma) / ma).to_numpy()
-        edges = [-0.03, -0.015, -0.005, 0.005, 0.015, 0.03]
         bucket = np.full_like(dist, -1, dtype=int)
         for i, d in enumerate(dist):
             if np.isnan(d):
                 continue
             bucket[i] = sum(d >= e for e in edges)
-        for b in range(7):
+        for b in range(len(edges) + 1):
             mask = (bucket == b)
             idx = np.where(mask)[0]
             for side in ("LONG", "SHORT"):
