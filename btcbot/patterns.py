@@ -652,11 +652,601 @@ def _fetch(symbol: str, timeframe: str, n_bars: int) -> pd.DataFrame:
     return full
 
 
+
+
+# ---- new family: variance_of_variance (auto-implemented) ----
+def mine_variance_of_variance(df: pd.DataFrame) -> list[PatternHit]:
+    """Heteroskedasticity clustering: rolling std-of-std of returns.
+
+    Crosses vol-of-vol z-score with absolute vol regime to detect regimes
+    where volatility itself is volatile vs steady, independently of vol level.
+    Orthogonal to vol_regime (which only captures the 1st moment of vol).
+    """
+    out: list[PatternHit] = []
+    ret = df["close"].pct_change()
+    n_bars = len(df)
+
+    for short_w in (10, 20):
+        short_vol = ret.rolling(short_w).std()
+        for vov_w in (30, 60, 120):
+            vov = short_vol.rolling(vov_w).std()
+            vov_mean = vov.rolling(vov_w * 2).mean()
+            vov_std = vov.rolling(vov_w * 2).std() + 1e-12
+            vov_z = (vov - vov_mean) / vov_std
+
+            long_vol = ret.rolling(vov_w).std()
+            vol_level_z = (short_vol - long_vol) / (long_vol + 1e-12)
+
+            vov_z_arr = vov_z.to_numpy()
+            level_arr = vol_level_z.to_numpy()
+
+            # bucket: low z<-0.5, mid -0.5..0.5, high z>0.5
+            vov_band_arr = np.where(
+                vov_z_arr < -0.5, 0,
+                np.where(vov_z_arr > 0.5, 2, 1),
+            )
+            # for level use same -0.5/+0.5 thresholds on its z-like measure
+            level_band_arr = np.where(
+                level_arr < -0.5, 0,
+                np.where(level_arr > 0.5, 2, 1),
+            )
+
+            valid = (
+                ~np.isnan(vov_z_arr)
+                & ~np.isnan(level_arr)
+                & ~np.isnan(short_vol.to_numpy())
+            )
+
+            band_names = {0: "low", 1: "mid", 2: "high"}
+            for vov_b in (0, 1, 2):
+                for lvl_b in (0, 1, 2):
+                    mask = valid & (vov_band_arr == vov_b) & (level_band_arr == lvl_b)
+                    idx = np.where(mask)[0]
+                    if len(idx) < 30:
+                        continue
+                    for side in ("LONG", "SHORT"):
+                        wins, n, rets = _classify_outcomes(df, idx, side)
+                        if n < 30:
+                            continue
+                        wlb, wub = _wilson(wins, n)
+                        mean_ret = float(np.mean(rets)) if rets else 0.0
+                        pnl = sum(rets) / 10_000 * 100
+                        out.append(PatternHit(
+                            name=f"variance_of_variance_sw{short_w}_vw{vov_w}_vov-{band_names[vov_b]}_lvl-{band_names[lvl_b]}_{side}",
+                            family="variance_of_variance", side=side,
+                            n=n, wins=wins, win_rate=wins / n,
+                            wilson_lower=wlb, wilson_upper=wub,
+                            mean_return_bps=mean_ret, net_pnl=pnl,
+                            params={
+                                "short_w": short_w,
+                                "vov_w": vov_w,
+                                "vov_band": band_names[vov_b],
+                                "level_band": band_names[lvl_b],
+                                "side": side,
+                            },
+                        ))
+    return out
+
+
+
+
+# ---- new family: mean_reversion_halflife (auto-implemented) ----
+def mine_mean_reversion_halflife(df: pd.DataFrame) -> list[PatternHit]:
+    """Fit rolling AR(1) on log-price, extract implied half-life of mean
+    reversion (-ln2/ln(phi)), and bucket into bands. Captures statistical
+    pull-back speed, distinct from current deviation magnitude."""
+    out: list[PatternHit] = []
+    if len(df) < 300:
+        return out
+
+    lp = np.log(df["close"].to_numpy())
+
+    def ar1_phi(arr: np.ndarray) -> float:
+        x = arr[:-1] - arr[:-1].mean()
+        y = arr[1:] - arr[1:].mean()
+        denom = (x ** 2).sum()
+        if denom < 1e-12:
+            return np.nan
+        return (x * y).sum() / denom
+
+    lp_series = pd.Series(lp)
+
+    for win in (60, 120, 240):
+        if len(df) < win + 30:
+            continue
+        phi = lp_series.rolling(win).apply(ar1_phi, raw=True).to_numpy()
+        # half-life: -ln(2)/ln(phi) for 0 < phi < 1
+        with np.errstate(invalid="ignore", divide="ignore"):
+            phi_clip = np.clip(phi, 1e-6, 0.9999)
+            hl = np.where(
+                (phi > 0) & (phi < 1),
+                -np.log(2) / np.log(phi_clip),
+                np.nan,
+            )
+
+        # bucket assignment
+        band = np.full(len(df), "none", dtype=object)
+        # explosive: phi >= 1
+        band[np.where((~np.isnan(phi)) & (phi >= 1))[0]] = "explosive"
+        # near random walk: phi < 0 OR hl > 50
+        nrw_mask = (~np.isnan(phi)) & ((phi < 0) | ((~np.isnan(hl)) & (hl > 50)))
+        band[np.where(nrw_mask)[0]] = "near_rw"
+        # slow: 15 <= hl <= 50
+        slow_mask = (~np.isnan(hl)) & (hl >= 15) & (hl <= 50)
+        band[np.where(slow_mask)[0]] = "slow"
+        # fast: 5 <= hl < 15
+        fast_mask = (~np.isnan(hl)) & (hl >= 5) & (hl < 15)
+        band[np.where(fast_mask)[0]] = "fast"
+        # very_fast: hl < 5
+        vf_mask = (~np.isnan(hl)) & (hl < 5) & (hl > 0)
+        band[np.where(vf_mask)[0]] = "very_fast"
+
+        for band_name in ("very_fast", "fast", "slow", "near_rw", "explosive"):
+            idx = np.where(band == band_name)[0]
+            if len(idx) < 30:
+                continue
+            for side in ("LONG", "SHORT"):
+                wins, n, rets = _classify_outcomes(df, idx, side)
+                if n < 30:
+                    continue
+                wlb, wub = _wilson(wins, n)
+                mean_ret = float(np.mean(rets)) if rets else 0.0
+                pnl = sum(rets) / 10_000 * 100
+                out.append(PatternHit(
+                    name=f"mean_reversion_halflife_w{win}_{band_name}_{side}",
+                    family="mean_reversion_halflife", side=side,
+                    n=n, wins=wins, win_rate=wins / n,
+                    wilson_lower=wlb, wilson_upper=wub,
+                    mean_return_bps=mean_ret, net_pnl=pnl,
+                    params={"window": win, "band": band_name, "side": side},
+                ))
+    return out
+
+
+
+# ---- new family: hurst_exponent_band (auto-implemented) ----
+def mine_hurst_exponent_band(df: pd.DataFrame) -> list[PatternHit]:
+    """Rolling Hurst exponent (R/S analysis). Buckets H into mean-reverting,
+    random-walk, or trending bands. Distinct from instantaneous slope signs:
+    captures the scaling-law character of returns over the window."""
+    out: list[PatternHit] = []
+    ret = df["close"].pct_change().fillna(0.0).to_numpy(dtype=float)
+
+    def rs_hurst(arr: np.ndarray) -> float:
+        chunk_sizes = (8, 16, 32)
+        log_n: list[float] = []
+        log_rs: list[float] = []
+        L = arr.shape[0]
+        for n_chunk in chunk_sizes:
+            if L < n_chunk * 2:
+                continue
+            rs_vals: list[float] = []
+            for i in range(0, L - n_chunk + 1, n_chunk):
+                chunk = arr[i:i + n_chunk]
+                mean = chunk.mean()
+                dev = chunk - mean
+                cum = dev.cumsum()
+                R = cum.max() - cum.min()
+                S = chunk.std() + 1e-12
+                rs_vals.append(R / S)
+            if rs_vals:
+                mean_rs = float(np.mean(rs_vals))
+                if mean_rs > 0:
+                    log_n.append(float(np.log(n_chunk)))
+                    log_rs.append(float(np.log(mean_rs)))
+        if len(log_n) < 2:
+            return np.nan
+        return float(np.polyfit(log_n, log_rs, 1)[0])
+
+    # Buckets: mr_strong (<0.35), mr (<0.45), rw (0.45-0.55), tr (>0.55), tr_strong (>0.65)
+    bucket_edges = [
+        ("mr_strong", -np.inf, 0.35),
+        ("mr",        0.35,    0.45),
+        ("rw",        0.45,    0.55),
+        ("tr",        0.55,    0.65),
+        ("tr_strong", 0.65,    np.inf),
+    ]
+
+    ret_series = pd.Series(ret)
+    for win in (128, 256):
+        if len(ret) < win + 1:
+            continue
+        H = ret_series.rolling(win, min_periods=win).apply(rs_hurst, raw=True).to_numpy()
+        for label, lo, hi in bucket_edges:
+            mask = (H >= lo) & (H < hi) & ~np.isnan(H)
+            idx = np.where(mask)[0]
+            if idx.size == 0:
+                continue
+            for side in ("LONG", "SHORT"):
+                wins, n, rets = _classify_outcomes(df, idx, side)
+                if n < 30:
+                    continue
+                wlb, wub = _wilson(wins, n)
+                pnl = sum(rets) / 10_000 * 100
+                out.append(PatternHit(
+                    name=f"hurst_exponent_band_w{win}_{label}_{side}",
+                    family="hurst_exponent_band",
+                    side=side,
+                    n=n, wins=wins, win_rate=wins / n,
+                    wilson_lower=wlb, wilson_upper=wub,
+                    mean_return_bps=float(np.mean(rets)) if rets else 0.0,
+                    net_pnl=pnl,
+                    params={"window": win, "band": label, "h_lo": lo, "h_hi": hi, "side": side},
+                ))
+    return out
+
+
+
+
+# ---- new family: kurtosis_burst (auto-implemented) ----
+def mine_kurtosis_burst(df: pd.DataFrame) -> list[PatternHit]:
+    """Rolling excess kurtosis of returns to detect fat-tail clusters.
+    Buckets a z-scored kurtosis series (4th-moment) so it's orthogonal to
+    vol_regime's 2nd-moment signal. Each (window, band) becomes its own
+    pattern, evaluated both LONG and SHORT.
+    """
+    out: list[PatternHit] = []
+    ret = df["close"].pct_change()
+    bands = [
+        ("gaussian",    -np.inf, -0.5),
+        ("mild_fat",    -0.5,     0.5),
+        ("fat",          0.5,     1.5),
+        ("extreme_fat",  1.5,    np.inf),
+    ]
+    for win in (50, 100, 200):
+        m = ret.rolling(win, min_periods=win).mean()
+        s = ret.rolling(win, min_periods=win).std() + 1e-12
+        z = (ret - m) / s
+        kurt = (z ** 4).rolling(win, min_periods=win).mean() - 3.0
+        k_mean = kurt.rolling(win * 2, min_periods=win * 2).mean()
+        k_std = kurt.rolling(win * 2, min_periods=win * 2).std() + 1e-12
+        k_z = ((kurt - k_mean) / k_std).to_numpy()
+        for band_name, lo, hi in bands:
+            with np.errstate(invalid="ignore"):
+                mask = (~np.isnan(k_z)) & (k_z >= lo) & (k_z < hi)
+            idx = np.where(mask)[0]
+            for side in ("LONG", "SHORT"):
+                wins, n, rets = _classify_outcomes(df, idx, side)
+                if n < 30:
+                    continue
+                wlb, wub = _wilson(wins, n)
+                mean_ret = float(np.mean(rets)) if rets else 0.0
+                pnl = sum(rets) / 10_000 * 100
+                out.append(PatternHit(
+                    name=f"kurtosis_burst_w{win}_{band_name}_{side}",
+                    family="kurtosis_burst", side=side,
+                    n=n, wins=wins, win_rate=wins / n,
+                    wilson_lower=wlb, wilson_upper=wub,
+                    mean_return_bps=mean_ret, net_pnl=pnl,
+                    params={"window": win, "band": band_name,
+                            "k_z_lo": None if lo == -np.inf else lo,
+                            "k_z_hi": None if hi == np.inf else hi,
+                            "side": side},
+                ))
+    return out
+
+
+
+# ---- new family: skew_burst (auto-implemented) ----
+def mine_skew_burst(df: pd.DataFrame) -> list[PatternHit]:
+    """Rolling skewness of returns banded into 5 regimes (strong_neg -> strong_pos).
+
+    Captures distributional asymmetry over a window via the third moment of
+    standardized returns. Distinct from single-bar candle asymmetry: this is
+    about the *distribution* of recent returns, not the shape of any one bar.
+    Strong negative skew historically precedes crash-prone regimes, strong
+    positive skew often appears in squeeze conditions.
+    """
+    out: list[PatternHit] = []
+    ret = df["close"].pct_change()
+    # band edges: (-inf, -1), [-1, -0.3), [-0.3, 0.3), [0.3, 1), [1, inf)
+    band_edges = [-1.0, -0.3, 0.3, 1.0]
+    band_labels = ["strong_neg", "neg", "sym", "pos", "strong_pos"]
+    for win in (40, 80, 160):
+        m = ret.rolling(win, min_periods=win).mean()
+        s = ret.rolling(win, min_periods=win).std(ddof=0) + 1e-12
+        z = (ret - m) / s
+        skew = (z ** 3).rolling(win, min_periods=win).mean().to_numpy()
+        band = np.full_like(skew, -1, dtype=int)
+        valid = ~np.isnan(skew)
+        for i in range(len(skew)):
+            if not valid[i]:
+                continue
+            v = skew[i]
+            b = 0
+            for e in band_edges:
+                if v >= e:
+                    b += 1
+            band[i] = b
+        for b, label in enumerate(band_labels):
+            mask = (band == b)
+            idx = np.where(mask)[0]
+            for side in ("LONG", "SHORT"):
+                wins, n, rets = _classify_outcomes(df, idx, side)
+                if n < 30:
+                    continue
+                wlb, wub = _wilson(wins, n)
+                mean_ret = float(np.mean(rets)) if rets else 0.0
+                pnl = sum(rets) / 10_000 * 100
+                out.append(PatternHit(
+                    name=f"skew_burst_w{win}_{label}_{side}",
+                    family="skew_burst", side=side,
+                    n=n, wins=wins, win_rate=wins / n,
+                    wilson_lower=wlb, wilson_upper=wub,
+                    mean_return_bps=mean_ret, net_pnl=pnl,
+                    params={"window": win, "band": label, "band_idx": b},
+                ))
+    return out
+
+
+
+# ---- new family: runlength_entropy (auto-implemented) ----
+
+# ---- family 13: run-length entropy ----------------------------------------
+def mine_runlength_entropy(df: pd.DataFrame) -> list[PatternHit]:
+    """Shannon entropy of the up/down run-length distribution over a rolling
+    window. Distinct from `run_length` (which keys on the CURRENT streak
+    count): this captures how repetitive vs diverse the sign sequence has
+    been. Low entropy means a few run-lengths dominate (structured / regime);
+    high entropy means runs are diverse (choppy / random)."""
+    out: list[PatternHit] = []
+    diff = df["close"].diff()
+    sign = np.sign(diff).replace(0, np.nan).ffill().fillna(0).to_numpy()
+
+    def _runs_entropy(arr: np.ndarray) -> float:
+        if len(arr) == 0:
+            return np.nan
+        runs: list[int] = []
+        cur = arr[0]
+        cnt = 1
+        for v in arr[1:]:
+            if v == cur:
+                cnt += 1
+            else:
+                runs.append(cnt)
+                cur = v
+                cnt = 1
+        runs.append(cnt)
+        if not runs:
+            return np.nan
+        _, counts = np.unique(np.asarray(runs), return_counts=True)
+        p = counts / counts.sum()
+        return float(-np.sum(p * np.log2(p + 1e-12)))
+
+    sign_ser = pd.Series(sign)
+    for win in (64, 128, 256):
+        H = sign_ser.rolling(win, min_periods=win).apply(_runs_entropy, raw=True).to_numpy()
+        # bucket entropy into low / mid / high
+        band = np.full(len(H), "", dtype=object)
+        band[np.where(H < 1.0)[0]] = "low"
+        band[np.where((H >= 1.0) & (H <= 2.0))[0]] = "mid"
+        band[np.where(H > 2.0)[0]] = "high"
+        for b_label in ("low", "mid", "high"):
+            for cur_sign in (1, -1):
+                mask = (band == b_label) & (sign == cur_sign) & ~np.isnan(H)
+                idx = np.where(mask)[0]
+                for side in ("LONG", "SHORT"):
+                    wins, n, rets = _classify_outcomes(df, idx, side)
+                    if n < 30:
+                        continue
+                    wlb, wub = _wilson(wins, n)
+                    mean_ret = float(np.mean(rets)) if rets else 0.0
+                    pnl = sum(rets) / 10_000 * 100
+                    sgn_lbl = "U" if cur_sign == 1 else "D"
+                    out.append(PatternHit(
+                        name=f"runlength_entropy_w{win}_{b_label}_{sgn_lbl}_{side}",
+                        family="runlength_entropy", side=side,
+                        n=n, wins=wins, win_rate=wins / n,
+                        wilson_lower=wlb, wilson_upper=wub,
+                        mean_return_bps=mean_ret, net_pnl=pnl,
+                        params={"window": win, "entropy_band": b_label,
+                                "cur_sign": int(cur_sign), "side": side},
+                    ))
+    return out
+
+
+
+
+# ---- new family: gap_behavior (auto-implemented) ----
+def mine_gap_behavior(df: pd.DataFrame) -> list[PatternHit]:
+    """Classify bar-to-bar gaps (open vs prior close, normalized by ATR) by
+    magnitude/direction, crossed with prior-bar direction and intra-bar
+    gap-fill state. Captures gap-fill vs gap-continuation regimes."""
+    out: list[PatternHit] = []
+    prev_close = df["close"].shift(1)
+    prev_dir = np.sign(df["close"].shift(1) - df["close"].shift(2)).to_numpy()
+    bar_range = (df["high"] - df["low"])
+    atr = bar_range.rolling(14, min_periods=14).mean() + 1e-12
+    gap = ((df["open"] - prev_close) / atr).to_numpy()
+    low = df["low"].to_numpy()
+    high = df["high"].to_numpy()
+    prev_close_arr = prev_close.to_numpy()
+    gap_filled = (
+        ((gap > 0) & (low <= prev_close_arr))
+        | ((gap < 0) & (high >= prev_close_arr))
+    )
+
+    gap_bands = [
+        ("big_down", -np.inf, -0.5),
+        ("down", -0.5, -0.1),
+        ("flat", -0.1, 0.1),
+        ("up", 0.1, 0.5),
+        ("big_up", 0.5, np.inf),
+    ]
+    for band_label, lo, hi in gap_bands:
+        gap_mask = (gap >= lo) & (gap < hi) & ~np.isnan(gap)
+        for pdir in (-1, 0, 1):
+            pdir_mask = (prev_dir == pdir) & ~np.isnan(prev_dir)
+            for fill_state in (True, False):
+                fill_mask = (gap_filled == fill_state)
+                mask = gap_mask & pdir_mask & fill_mask
+                idx = np.where(mask)[0]
+                for side in ("LONG", "SHORT"):
+                    wins, n, rets = _classify_outcomes(df, idx, side)
+                    if n < 30:
+                        continue
+                    wlb, wub = _wilson(wins, n)
+                    mean_ret = float(np.mean(rets)) if rets else 0.0
+                    pnl = sum(rets) / 10_000 * 100
+                    fstr = "filled" if fill_state else "unfilled"
+                    out.append(PatternHit(
+                        name=f"gap_behavior_{band_label}_pd{pdir}_{fstr}_{side}",
+                        family="gap_behavior", side=side,
+                        n=n, wins=wins, win_rate=wins / n,
+                        wilson_lower=wlb, wilson_upper=wub,
+                        mean_return_bps=mean_ret, net_pnl=pnl,
+                        params={
+                            "gap_band": band_label,
+                            "gap_lo": float(lo) if np.isfinite(lo) else None,
+                            "gap_hi": float(hi) if np.isfinite(hi) else None,
+                            "prev_dir": int(pdir),
+                            "gap_filled": bool(fill_state),
+                        },
+                    ))
+    return out
+
+
+
+# ---- new family: price_acceleration (auto-implemented) ----
+def mine_price_acceleration(df: pd.DataFrame) -> list[PatternHit]:
+    """Second-derivative regime detection: cross current slope sign with
+    z-scored acceleration band. Orthogonal to mtf_slope which uses only
+    first-derivative signs."""
+    out: list[PatternHit] = []
+    close = df["close"].to_numpy()
+    n_bars = len(close)
+
+    def _lin_slope(arr: np.ndarray) -> float:
+        x = np.arange(len(arr), dtype=float)
+        # polyfit slope = cov(x,y)/var(x); compute directly for speed
+        xm = x.mean()
+        ym = arr.mean()
+        denom = ((x - xm) ** 2).sum()
+        if denom <= 0:
+            return 0.0
+        return float(((x - xm) * (arr - ym)).sum() / denom)
+
+    accel_bands = [
+        ("strong_decel", -np.inf, -1.0),
+        ("decel",        -1.0,    -0.3),
+        ("flat",         -0.3,     0.3),
+        ("accel",         0.3,     1.0),
+        ("strong_accel",  1.0,     np.inf),
+    ]
+
+    for slope_w in (5, 10, 20):
+        if n_bars < slope_w * 5 + 2:
+            continue
+        slope_series = df["close"].rolling(slope_w).apply(_lin_slope, raw=True)
+        slope_norm = (slope_series / df["close"]).to_numpy()
+        accel = pd.Series(slope_norm).diff(slope_w)
+        win = slope_w * 4
+        a_mean = accel.rolling(win).mean()
+        a_std = accel.rolling(win).std() + 1e-12
+        a_z = ((accel - a_mean) / a_std).to_numpy()
+
+        slope_sign = np.sign(slope_norm)
+        valid = ~np.isnan(slope_norm) & ~np.isnan(a_z)
+
+        for sign_val in (-1, 1):
+            for band_name, lo, hi in accel_bands:
+                mask = valid & (slope_sign == sign_val) & (a_z >= lo) & (a_z < hi)
+                idx = np.where(mask)[0]
+                if len(idx) < 30:
+                    continue
+                for side in ("LONG", "SHORT"):
+                    wins, n, rets = _classify_outcomes(df, idx, side)
+                    if n < 30:
+                        continue
+                    wlb, wub = _wilson(wins, n)
+                    mean_ret = float(np.mean(rets)) if rets else 0.0
+                    pnl = sum(rets) / 10_000 * 100
+                    sign_tag = "up" if sign_val == 1 else "dn"
+                    out.append(PatternHit(
+                        name=f"price_acceleration_w{slope_w}_slope{sign_tag}_{band_name}_{side}",
+                        family="price_acceleration", side=side,
+                        n=n, wins=wins, win_rate=wins / n,
+                        wilson_lower=wlb, wilson_upper=wub,
+                        mean_return_bps=mean_ret, net_pnl=pnl,
+                        params={
+                            "slope_w": slope_w,
+                            "slope_sign": int(sign_val),
+                            "accel_band": band_name,
+                            "side": side,
+                        },
+                    ))
+    return out
+
+
+
+# ---- new family: volume_price_divergence (auto-implemented) ----
+def mine_volume_price_divergence(df: pd.DataFrame) -> list[PatternHit]:
+    """Rolling correlation between log-volume and (a) absolute returns and
+    (b) signed returns. Captures accumulation/distribution regimes.
+
+    Orthogonal to volume_spike (single-bar z-score) and ma_distance
+    (price-only). 3 windows x 3 abs-bands x 3 signed-bands = 27 combos per
+    side (skipping ones that fail the n>=30 floor)."""
+    out: list[PatternHit] = []
+    close = df["close"]
+    volume = df["volume"]
+
+    ret = close.pct_change()
+    abs_ret = ret.abs()
+    lvol = np.log(volume.astype(float) + 1.0)
+
+    def _band(s: pd.Series) -> np.ndarray:
+        # 'neg' = -1, 'neutral' = 0, 'pos' = 1; nan -> -99 (no match)
+        arr = s.to_numpy()
+        out_arr = np.full(arr.shape, -99, dtype=int)
+        mask_valid = ~np.isnan(arr)
+        out_arr[mask_valid & (arr < -0.2)] = -1
+        out_arr[mask_valid & (arr >= -0.2) & (arr <= 0.2)] = 0
+        out_arr[mask_valid & (arr > 0.2)] = 1
+        return out_arr
+
+    label_map = {-1: "neg", 0: "neutral", 1: "pos"}
+
+    for win in (20, 50, 100):
+        corr_abs = lvol.rolling(win, min_periods=win).corr(abs_ret)
+        corr_sgn = lvol.rolling(win, min_periods=win).corr(ret)
+        band_abs = _band(corr_abs)
+        band_sgn = _band(corr_sgn)
+        for ba in (-1, 0, 1):
+            for bs in (-1, 0, 1):
+                mask = (band_abs == ba) & (band_sgn == bs)
+                idx = np.where(mask)[0]
+                for side in ("LONG", "SHORT"):
+                    wins, n, rets = _classify_outcomes(df, idx, side)
+                    if n < 30:
+                        continue
+                    wlb, wub = _wilson(wins, n)
+                    mean_ret = float(np.mean(rets)) if rets else 0.0
+                    pnl = sum(rets) / 10_000 * 100
+                    out.append(PatternHit(
+                        name=f"volpricediv_w{win}_abs{label_map[ba]}_sgn{label_map[bs]}_{side}",
+                        family="volume_price_divergence",
+                        side=side,
+                        n=n, wins=wins, win_rate=wins / n,
+                        wilson_lower=wlb, wilson_upper=wub,
+                        mean_return_bps=mean_ret, net_pnl=pnl,
+                        params={
+                            "window": win,
+                            "corr_abs_band": label_map[ba],
+                            "corr_sgn_band": label_map[bs],
+                        },
+                    ))
+    return out
+
+
+
 MINERS = {
+    # original 4
     "run_length": mine_run_length,
     "body_size": mine_body_size,
     "time_of_day": mine_time_of_day,
     "indicator_band": mine_indicator_bands,
+    # +8 expansion families
     "candlestick": mine_candlestick,
     "vol_regime": mine_vol_regime,
     "volume_spike": mine_volume_spike,
@@ -665,6 +1255,17 @@ MINERS = {
     "range_compression": mine_range_compression,
     "adx_trend": mine_adx,
     "swing_count": mine_swing_count,
+    # +9 statistical/structural families (auto-implemented from
+    # adversarially-verified design workflow)
+    "variance_of_variance": mine_variance_of_variance,
+    "mean_reversion_halflife": mine_mean_reversion_halflife,
+    "hurst_exponent_band": mine_hurst_exponent_band,
+    "kurtosis_burst": mine_kurtosis_burst,
+    "skew_burst": mine_skew_burst,
+    "runlength_entropy": mine_runlength_entropy,
+    "gap_behavior": mine_gap_behavior,
+    "price_acceleration": mine_price_acceleration,
+    "volume_price_divergence": mine_volume_price_divergence,
 }
 
 
