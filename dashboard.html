@@ -55,12 +55,12 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
 </style>
 </head><body>
 <h1>btcbot <span class="badge">PAPER</span> </h1>
-<div class="sub">Generated 2026-06-25 17:24 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
+<div class="sub">Generated 2026-06-25 19:24 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
 
 <nav>
   <button id="btn-overview" onclick="showTab('overview')">Overview</button>
   <button id="btn-edge" onclick="showTab('edge')">📊 Edge report</button>
-  <button id="btn-open" onclick="showTab('open')">Open (0)</button>
+  <button id="btn-open" onclick="showTab('open')">Open (1)</button>
   <button id="btn-settled" onclick="showTab('settled')">Settled (6)</button>
   <button id="btn-strategies" onclick="showTab('strategies')">Strategies</button>
   <button id="btn-ladder" onclick="showTab('ladder')">Ladder</button>
@@ -84,18 +84,18 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
         </div>
         <div class="ic-box">
           <div class="ic-lab">On stake</div>
-          <div class="ic-val">$0.00</div>
+          <div class="ic-val">$20.00</div>
           <div class="ic-sub">in open positions</div>
         </div>
         <div class="ic-box highlight">
           <div class="ic-lab">Net balance</div>
-          <div class="ic-val accent">$999.53</div>
+          <div class="ic-val accent">$979.53</div>
           <div class="ic-sub">free to deploy</div>
         </div>
       </div>
       <div class="ic-foot">
         Total account value <b>$999.53</b>
-        &nbsp;=&nbsp; $999.53 free &nbsp;+&nbsp; $0.00 on stake
+        &nbsp;=&nbsp; $979.53 free &nbsp;+&nbsp; $20.00 on stake
         &nbsp;·&nbsp; symbol <b>BTC/USDT</b> &nbsp;·&nbsp; timeframe <b>5m</b>
         &nbsp;·&nbsp; daily budget <b>$100.00</b>
         &nbsp;·&nbsp; drawdown <b>0.05%</b>
@@ -185,11 +185,11 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
     <div class="card">
       <h2>Bottom line</h2>
       <div class="kv">
-        <b>Trades resolved</b><div>6 (open: 0)</div>
+        <b>Trades resolved</b><div>6 (open: 1)</div>
         <b>Win rate</b><div>16.7% (95% CI: 3.0% – 56.4%)</div>
         <b>Net P&L</b><div class="neg"><b>-$0.47</b></div>
-        <b>Capital deployed</b><div>$120.00</div>
-        <b>ROI</b><div class="neg">-0.39%</div>
+        <b>Capital deployed</b><div>$140.00</div>
+        <b>ROI</b><div class="neg">-0.34%</div>
         <b>Fees+slip paid</b><div>$0.36</div>
       </div>
     </div>
@@ -210,8 +210,8 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>20.0%</td>
           <td>3.6%</td>
           <td class="neg">-$0.39</td>
-          <td>-0.39%</td>
-          <td>$100.00</td>
+          <td>-0.32%</td>
+          <td>$120.00</td>
         </tr></tbody>
       </table>
     </div>
@@ -233,14 +233,32 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>20.0%</td>
           <td>3.6%</td>
           <td class="neg">-$0.39</td>
-          <td>-0.39%</td>
-          <td>$100.00</td>
+          <td>-0.32%</td>
+          <td>$120.00</td>
         </tr></tbody>
       </table>
     </div>
     </div>
 
-<div id="tab-open" class="tab"><div class="card"><h2>Open positions</h2><div class="note">No open positions.</div></div></div>
+<div id="tab-open" class="tab"><div class="card"><h2>Open positions</h2>
+      <table class="t">
+        <thead><tr><th>id</th><th>strategy</th><th>side</th><th>symbol</th>
+          <th>entry</th><th>size</th><th>tp</th><th>sl</th><th>regime</th><th>opened</th></tr></thead>
+        <tbody>
+        <tr>
+          <td>7</td>
+          <td>nsigma_fade</td>
+          <td class="pos">LONG</td>
+          <td>BTC/USDT</td>
+          <td>$59,278.01</td>
+          <td>$20.00</td>
+          <td>$59,421.47</td>
+          <td>$59,133.00</td>
+          <td>trending_down</td>
+          <td>2026-06-25 19:15</td>
+        </tr></tbody>
+      </table>
+    </div></div>
 
 <div id="tab-settled" class="tab"><div class="card"><h2>Settled trades</h2>
       <table class="t">
