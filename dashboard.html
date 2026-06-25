@@ -55,7 +55,7 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
 </style>
 </head><body>
 <h1>btcbot <span class="badge">PAPER</span> </h1>
-<div class="sub">Generated 2026-06-24 23:43 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
+<div class="sub">Generated 2026-06-25 01:53 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
 
 <nav>
   <button id="btn-overview" onclick="showTab('overview')">Overview</button>
@@ -117,7 +117,18 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
     <div class="card grid-2">
       <div>
         <h2>Equity curve (last 60 days)</h2>
-        <div class="note">Equity chart populates once daily snapshots accrue. They are written by <code>python run.py snapshot-day</code> or automatically at 00:05 UTC by serve.py.</div>
+        
+      <svg viewBox="0 0 860 240" class="chart" preserveAspectRatio="xMidYMid meet">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#3fb950" stop-opacity="0.35"/>
+          <stop offset="1" stop-color="#3fb950" stop-opacity="0"/>
+        </linearGradient></defs>
+        <line x1="34" y1="206.0" x2="826" y2="206.0" class="grid"/><text x="6" y="210.0" class="axlab">$1,000</text><line x1="34" y1="163.0" x2="826" y2="163.0" class="grid"/><text x="6" y="167.0" class="axlab">$1,000</text><line x1="34" y1="120.0" x2="826" y2="120.0" class="grid"/><text x="6" y="124.0" class="axlab">$1,000</text><line x1="34" y1="77.0" x2="826" y2="77.0" class="grid"/><text x="6" y="81.0" class="axlab">$1,000</text><line x1="34" y1="34.0" x2="826" y2="34.0" class="grid"/><text x="6" y="38.0" class="axlab">$1,001</text>
+        <path d="M 34.0,206.0 L 34.0,206.0 L 826.0,206.0 L 826.0,206.0 Z" fill="url(#g)"/>
+        <polyline points="34.0,206.0 826.0,206.0" fill="none" stroke="#3fb950" stroke-width="2.5"/>
+        <text x="34.0" y="232" class="axlab" text-anchor="middle">06-24</text><text x="826.0" y="232" class="axlab" text-anchor="middle">06-25</text><text x="826.0" y="232" class="axlab" text-anchor="middle">06-25</text>
+      </svg>
+    
       </div>
       <div class="donut-wrap">
         <h2>Win rate</h2>
@@ -436,401 +447,401 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>nsigma_fade::z-1.2_tp1.0_sl1.0_h24</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>49.6%</td>
-          <td>48.5%</td>
+          <td>8467</td>
+          <td>49.7%</td>
+          <td>48.6%</td>
           <td>50.1%</td>
-          <td class="neg">-$128.89</td>
+          <td class="neg">-$515.21</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.0_sl1.0_h12</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>49.1%</td>
-          <td>48.1%</td>
+          <td>8467</td>
+          <td>49.3%</td>
+          <td>48.2%</td>
           <td>50.1%</td>
-          <td class="neg">-$128.83</td>
+          <td class="neg">-$514.92</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.2_sl1.0_h24</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>46.2%</td>
-          <td>45.1%</td>
+          <td>8467</td>
+          <td>46.3%</td>
+          <td>45.3%</td>
           <td>45.5%</td>
-          <td class="neg">-$294.81</td>
+          <td class="neg">-$511.27</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.0_sl1.0_h6</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>45.8%</td>
-          <td>44.7%</td>
+          <td>8467</td>
+          <td>46.0%</td>
+          <td>45.0%</td>
           <td>50.1%</td>
-          <td class="neg">-$128.64</td>
+          <td class="neg">-$514.45</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.2_sl1.0_h12</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>45.4%</td>
-          <td>44.3%</td>
+          <td>8467</td>
+          <td>45.6%</td>
+          <td>44.5%</td>
           <td>45.5%</td>
-          <td class="neg">-$294.67</td>
+          <td class="neg">-$510.98</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.0_sl0.7_h24</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>43.0%</td>
-          <td>41.9%</td>
+          <td>8467</td>
+          <td>43.3%</td>
+          <td>42.2%</td>
           <td>41.3%</td>
-          <td class="neg">-$423.81</td>
+          <td class="neg">-$505.40</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.0_sl0.7_h12</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>42.8%</td>
-          <td>41.8%</td>
+          <td>8467</td>
+          <td>43.1%</td>
+          <td>42.1%</td>
           <td>41.3%</td>
-          <td class="neg">-$423.51</td>
+          <td class="neg">-$505.03</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.0_sl0.7_h6</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>41.1%</td>
-          <td>40.0%</td>
+          <td>8467</td>
+          <td>41.4%</td>
+          <td>40.4%</td>
           <td>41.3%</td>
-          <td class="neg">-$422.96</td>
+          <td class="neg">-$504.60</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.2_sl1.0_h6</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>40.8%</td>
-          <td>39.7%</td>
+          <td>8467</td>
+          <td>41.0%</td>
+          <td>40.0%</td>
           <td>45.5%</td>
-          <td class="neg">-$293.93</td>
+          <td class="neg">-$510.00</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.2_sl0.7_h24</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>39.9%</td>
-          <td>38.9%</td>
+          <td>8467</td>
+          <td>40.2%</td>
+          <td>39.2%</td>
           <td>36.9%</td>
-          <td class="neg">-$534.34</td>
+          <td class="neg">-$500.13</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.2_sl0.7_h12</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>39.5%</td>
-          <td>38.5%</td>
+          <td>8467</td>
+          <td>39.9%</td>
+          <td>38.8%</td>
           <td>36.9%</td>
-          <td class="neg">-$534.23</td>
+          <td class="neg">-$499.99</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.5_h48_pb1.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1332</td>
-          <td>39.7%</td>
-          <td>37.1%</td>
+          <td>1325</td>
+          <td>40.0%</td>
+          <td>37.4%</td>
           <td>42.9%</td>
-          <td class="neg">-$64.42</td>
+          <td class="neg">-$86.43</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.0_sl0.5_h24</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>38.1%</td>
-          <td>37.0%</td>
+          <td>8467</td>
+          <td>38.3%</td>
+          <td>37.3%</td>
           <td>33.4%</td>
-          <td class="neg">-$610.20</td>
+          <td class="neg">-$495.65</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.0_sl0.5_h12</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>38.0%</td>
-          <td>37.0%</td>
+          <td>8467</td>
+          <td>38.3%</td>
+          <td>37.2%</td>
           <td>33.4%</td>
-          <td class="neg">-$609.93</td>
+          <td class="neg">-$495.43</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl2.0_h24_pb1.0</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>888</td>
-          <td>40.1%</td>
-          <td>36.9%</td>
+          <td>882</td>
+          <td>40.4%</td>
+          <td>37.2%</td>
           <td>50.1%</td>
-          <td class="neg">-$15.43</td>
+          <td class="neg">-$61.12</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.5_h36_pb1.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1332</td>
-          <td>39.4%</td>
-          <td>36.8%</td>
+          <td>1325</td>
+          <td>39.7%</td>
+          <td>37.1%</td>
           <td>42.9%</td>
-          <td class="neg">-$64.17</td>
+          <td class="neg">-$86.08</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl2.0_h24_pb0.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>438</td>
-          <td>40.6%</td>
-          <td>36.1%</td>
+          <td>430</td>
+          <td>41.4%</td>
+          <td>36.8%</td>
           <td>50.1%</td>
-          <td class="neg">-$7.46</td>
+          <td class="neg">-$29.10</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.0_sl0.5_h6</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>37.0%</td>
-          <td>36.0%</td>
+          <td>8467</td>
+          <td>37.3%</td>
+          <td>36.3%</td>
           <td>33.4%</td>
-          <td class="neg">-$609.07</td>
-        </tr>
-        <tr>
-          <td>momentum_ema_cross::tp2.0_sl1.5_h24_pb1.5</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>1332</td>
-          <td>38.3%</td>
-          <td>35.7%</td>
-          <td>42.9%</td>
-          <td class="neg">-$63.36</td>
+          <td class="neg">-$494.95</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.2_sl0.7_h6</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>36.7%</td>
-          <td>35.7%</td>
+          <td>8467</td>
+          <td>37.1%</td>
+          <td>36.1%</td>
           <td>36.9%</td>
-          <td class="neg">-$533.47</td>
+          <td class="neg">-$499.50</td>
         </tr>
         <tr>
-          <td>momentum_ema_cross::tp2.0_sl1.5_h48_pb1.0</td>
+          <td>momentum_ema_cross::tp2.0_sl1.5_h24_pb1.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>888</td>
-          <td>38.4%</td>
-          <td>35.3%</td>
+          <td>1325</td>
+          <td>38.6%</td>
+          <td>36.0%</td>
           <td>42.9%</td>
-          <td class="neg">-$43.62</td>
+          <td class="neg">-$84.98</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.5_h48_pb0.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>438</td>
-          <td>39.5%</td>
-          <td>35.0%</td>
+          <td>430</td>
+          <td>40.2%</td>
+          <td>35.7%</td>
           <td>42.9%</td>
-          <td class="neg">-$20.81</td>
+          <td class="neg">-$27.48</td>
+        </tr>
+        <tr>
+          <td>momentum_ema_cross::tp2.0_sl1.5_h48_pb1.0</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>882</td>
+          <td>38.7%</td>
+          <td>35.5%</td>
+          <td>42.9%</td>
+          <td class="neg">-$58.47</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.5_h36_pb1.0</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>888</td>
-          <td>38.0%</td>
-          <td>34.8%</td>
+          <td>882</td>
+          <td>38.2%</td>
+          <td>35.1%</td>
           <td>42.9%</td>
-          <td class="neg">-$43.54</td>
+          <td class="neg">-$58.36</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.5_h36_pb0.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>438</td>
-          <td>38.8%</td>
-          <td>34.4%</td>
+          <td>430</td>
+          <td>39.5%</td>
+          <td>35.0%</td>
           <td>42.9%</td>
-          <td class="neg">-$20.83</td>
+          <td class="neg">-$27.51</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.2_sl0.5_h24</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>35.1%</td>
-          <td>34.0%</td>
+          <td>8467</td>
+          <td>35.4%</td>
+          <td>34.4%</td>
           <td>29.5%</td>
-          <td class="neg">-$684.61</td>
+          <td class="neg">-$490.52</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.2_sl0.5_h12</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>34.9%</td>
-          <td>33.9%</td>
+          <td>8467</td>
+          <td>35.2%</td>
+          <td>34.2%</td>
           <td>29.5%</td>
-          <td class="neg">-$684.39</td>
+          <td class="neg">-$490.36</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.5_h24_pb1.0</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>888</td>
-          <td>36.9%</td>
-          <td>33.8%</td>
+          <td>882</td>
+          <td>37.2%</td>
+          <td>34.1%</td>
           <td>42.9%</td>
-          <td class="neg">-$43.09</td>
+          <td class="neg">-$57.75</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.5_h24_pb0.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>438</td>
-          <td>37.7%</td>
-          <td>33.3%</td>
+          <td>430</td>
+          <td>38.4%</td>
+          <td>33.9%</td>
           <td>42.9%</td>
-          <td class="neg">-$20.65</td>
+          <td class="neg">-$27.27</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.2_sl0.5_h6</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>33.2%</td>
-          <td>32.2%</td>
+          <td>8467</td>
+          <td>33.5%</td>
+          <td>32.5%</td>
           <td>29.5%</td>
-          <td class="neg">-$683.27</td>
+          <td class="neg">-$489.71</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.0_h48_pb1.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1332</td>
-          <td>33.8%</td>
-          <td>31.3%</td>
+          <td>1325</td>
+          <td>34.0%</td>
+          <td>31.5%</td>
           <td>33.4%</td>
-          <td class="neg">-$101.16</td>
+          <td class="neg">-$81.75</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.0_h36_pb1.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1332</td>
-          <td>33.6%</td>
-          <td>31.1%</td>
+          <td>1325</td>
+          <td>33.8%</td>
+          <td>31.3%</td>
           <td>33.4%</td>
-          <td class="neg">-$101.14</td>
+          <td class="neg">-$81.72</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.0_h24_pb1.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1332</td>
-          <td>33.2%</td>
-          <td>30.7%</td>
+          <td>1325</td>
           <td>33.4%</td>
-          <td class="neg">-$100.45</td>
+          <td>30.9%</td>
+          <td>33.4%</td>
+          <td class="neg">-$81.17</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.0_h48_pb1.0</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>888</td>
-          <td>33.1%</td>
-          <td>30.1%</td>
+          <td>882</td>
+          <td>33.3%</td>
+          <td>30.3%</td>
           <td>33.4%</td>
-          <td class="neg">-$68.31</td>
+          <td class="neg">-$55.14</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.5_sl0.5_h12</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>30.8%</td>
-          <td>29.8%</td>
+          <td>8467</td>
+          <td>31.2%</td>
+          <td>30.2%</td>
           <td>25.0%</td>
-          <td class="neg">-$757.70</td>
+          <td class="neg">-$485.56</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.0_h36_pb1.0</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>888</td>
-          <td>32.8%</td>
-          <td>29.8%</td>
+          <td>882</td>
+          <td>33.0%</td>
+          <td>30.0%</td>
           <td>33.4%</td>
-          <td class="neg">-$68.28</td>
-        </tr>
-        <tr>
-          <td>momentum_ema_cross::tp2.0_sl1.0_h24_pb1.0</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>888</td>
-          <td>32.3%</td>
-          <td>29.3%</td>
-          <td>33.4%</td>
-          <td class="neg">-$67.86</td>
+          <td class="neg">-$55.11</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.0_h48_pb0.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>438</td>
-          <td>33.6%</td>
-          <td>29.3%</td>
+          <td>430</td>
+          <td>34.2%</td>
+          <td>29.9%</td>
           <td>33.4%</td>
-          <td class="neg">-$32.88</td>
+          <td class="neg">-$26.17</td>
+        </tr>
+        <tr>
+          <td>momentum_ema_cross::tp2.0_sl1.0_h24_pb1.0</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>882</td>
+          <td>32.5%</td>
+          <td>29.5%</td>
+          <td>33.4%</td>
+          <td class="neg">-$54.77</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.0_h36_pb0.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>438</td>
-          <td>33.1%</td>
-          <td>28.9%</td>
+          <td>430</td>
+          <td>33.7%</td>
+          <td>29.4%</td>
           <td>33.4%</td>
-          <td class="neg">-$32.90</td>
+          <td class="neg">-$26.18</td>
         </tr>
         <tr>
           <td>momentum_ema_cross::tp2.0_sl1.0_h24_pb0.5</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>438</td>
-          <td>32.9%</td>
-          <td>28.6%</td>
+          <td>430</td>
+          <td>33.5%</td>
+          <td>29.2%</td>
           <td>33.4%</td>
-          <td class="neg">-$32.67</td>
+          <td class="neg">-$26.00</td>
         </tr>
         <tr>
           <td>nsigma_fade::z-1.2_tp1.5_sl0.5_h6</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>8486</td>
-          <td>28.3%</td>
-          <td>27.3%</td>
+          <td>8467</td>
+          <td>28.6%</td>
+          <td>27.6%</td>
           <td>25.0%</td>
-          <td class="neg">-$756.55</td>
+          <td class="neg">-$485.08</td>
         </tr>
         <tr>
           <td>breakout_donchian::tp1.5_sl0.8_h12</td>
@@ -1057,18 +1068,6 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="pos">+$9.53</td>
         </tr>
         <tr>
-          <td>madist_w80_b1_LONG@5m</td>
-          <td>ma_distance_5m</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-trial">trial</span></td>
-          <td>0</td>
-          <td>60</td>
-          <td>68.3%</td>
-          <td>55.8%</td>
-          <td>no</td>
-          <td class="pos">+$13.63</td>
-        </tr>
-        <tr>
           <td>volpricediv_w100_absneutral_sgnneg_LONG@1h</td>
           <td>volume_price_divergence_1h</td>
           <td class="pos">LONG</td>
@@ -1105,18 +1104,6 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="pos">+$72.48</td>
         </tr>
         <tr>
-          <td>madist_w100_b1_LONG@5m</td>
-          <td>ma_distance_5m</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>92</td>
-          <td>59.8%</td>
-          <td>49.6%</td>
-          <td>no</td>
-          <td class="pos">+$16.21</td>
-        </tr>
-        <tr>
           <td>madist_w30_b0_LONG@1h</td>
           <td>ma_distance_1h</td>
           <td class="pos">LONG</td>
@@ -1129,16 +1116,28 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="pos">+$26.80</td>
         </tr>
         <tr>
+          <td>madist_w80_b1_LONG@5m</td>
+          <td>ma_distance_5m</td>
+          <td class="pos">LONG</td>
+          <td><span class="pill tier-trial">trial</span></td>
+          <td>0</td>
+          <td>83</td>
+          <td>59.0%</td>
+          <td>48.3%</td>
+          <td>no</td>
+          <td class="pos">+$4.07</td>
+        </tr>
+        <tr>
           <td>madist_w50_b9_SHORT@1h</td>
           <td>ma_distance_1h</td>
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>499</td>
-          <td>52.5%</td>
-          <td>48.1%</td>
+          <td>492</td>
+          <td>52.6%</td>
+          <td>48.2%</td>
           <td>no</td>
-          <td class="pos">+$45.25</td>
+          <td class="pos">+$45.81</td>
         </tr>
         <tr>
           <td>madist_w100_b9_SHORT@1h</td>
@@ -1177,6 +1176,18 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="pos">+$17.08</td>
         </tr>
         <tr>
+          <td>madist_w200_b0_LONG@15m</td>
+          <td>ma_distance_15m</td>
+          <td class="pos">LONG</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>315</td>
+          <td>52.4%</td>
+          <td>46.9%</td>
+          <td>yes</td>
+          <td class="neg">-$7.37</td>
+        </tr>
+        <tr>
           <td>madist_w10_b2_LONG@5m</td>
           <td>ma_distance_5m</td>
           <td class="pos">LONG</td>
@@ -1189,16 +1200,16 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="pos">+$4.33</td>
         </tr>
         <tr>
-          <td>madist_w20_b2_LONG@5m</td>
-          <td>ma_distance_5m</td>
+          <td>madist_w50_b1_LONG@15m</td>
+          <td>ma_distance_15m</td>
           <td class="pos">LONG</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>138</td>
-          <td>54.3%</td>
-          <td>46.0%</td>
+          <td>239</td>
+          <td>52.7%</td>
+          <td>46.4%</td>
           <td>no</td>
-          <td class="pos">+$10.62</td>
+          <td class="pos">+$8.84</td>
         </tr>
         <tr>
           <td>madist_w30_b9_SHORT@1h</td>
@@ -1206,11 +1217,23 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>251</td>
-          <td>52.2%</td>
-          <td>46.0%</td>
+          <td>248</td>
+          <td>52.4%</td>
+          <td>46.2%</td>
           <td>no</td>
           <td class="neg">-$8.58</td>
+        </tr>
+        <tr>
+          <td>madist_w100_b1_LONG@5m</td>
+          <td>ma_distance_5m</td>
+          <td class="pos">LONG</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>128</td>
+          <td>54.7%</td>
+          <td>46.1%</td>
+          <td>no</td>
+          <td class="pos">+$2.55</td>
         </tr>
         <tr>
           <td>variance_of_variance_sw20_vw60_vov-high_lvl-low_LONG@1h</td>
@@ -1261,18 +1284,6 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$179.99</td>
         </tr>
         <tr>
-          <td>madist_w200_b0_LONG@15m</td>
-          <td>ma_distance_15m</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>308</td>
-          <td>51.3%</td>
-          <td>45.7%</td>
-          <td>yes</td>
-          <td class="neg">-$21.51</td>
-        </tr>
-        <tr>
           <td>variance_of_variance_sw20_vw120_vov-mid_lvl-low_LONG@1h</td>
           <td>variance_of_variance_1h</td>
           <td class="pos">LONG</td>
@@ -1285,28 +1296,28 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="pos">+$29.84</td>
         </tr>
         <tr>
+          <td>madist_w20_b8_SHORT@1h</td>
+          <td>ma_distance_1h</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>728</td>
+          <td>48.8%</td>
+          <td>45.1%</td>
+          <td>no</td>
+          <td class="neg">-$82.49</td>
+        </tr>
+        <tr>
           <td>kurtosis_burst_w50_fat_LONG@1h</td>
           <td>kurtosis_burst_1h</td>
           <td class="pos">LONG</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1558</td>
-          <td>47.7%</td>
-          <td>45.2%</td>
-          <td>no</td>
-          <td class="neg">-$33.88</td>
-        </tr>
-        <tr>
-          <td>variance_of_variance_sw20_vw120_vov-high_lvl-high_LONG@15m</td>
-          <td>variance_of_variance_15m</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>520</td>
-          <td>49.4%</td>
+          <td>1561</td>
+          <td>47.6%</td>
           <td>45.1%</td>
           <td>no</td>
-          <td class="pos">+$9.28</td>
+          <td class="neg">-$35.67</td>
         </tr>
         <tr>
           <td>madist_w100_b1_LONG@1h</td>
@@ -1333,28 +1344,16 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$12.59</td>
         </tr>
         <tr>
-          <td>madist_w50_b1_LONG@15m</td>
-          <td>ma_distance_15m</td>
+          <td>variance_of_variance_sw20_vw120_vov-high_lvl-high_LONG@15m</td>
+          <td>variance_of_variance_15m</td>
           <td class="pos">LONG</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>221</td>
-          <td>51.6%</td>
+          <td>528</td>
+          <td>49.2%</td>
           <td>45.0%</td>
           <td>no</td>
-          <td class="neg">-$4.57</td>
-        </tr>
-        <tr>
-          <td>madist_w20_b8_SHORT@1h</td>
-          <td>ma_distance_1h</td>
-          <td class="neg">SHORT</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>734</td>
-          <td>48.5%</td>
-          <td>44.9%</td>
-          <td>no</td>
-          <td class="neg">-$93.43</td>
+          <td class="pos">+$8.38</td>
         </tr>
         <tr>
           <td>skew_burst_w80_pos_SHORT@1h</td>
@@ -1362,23 +1361,23 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1675</td>
+          <td>1660</td>
           <td>46.9%</td>
           <td>44.5%</td>
           <td>no</td>
-          <td class="neg">-$98.15</td>
+          <td class="neg">-$94.50</td>
         </tr>
         <tr>
-          <td>price_acceleration_w20_slopedn_strong_accel_LONG@1h</td>
-          <td>price_acceleration_1h</td>
-          <td class="pos">LONG</td>
+          <td>swing_HH12_t5_SHORT@1h</td>
+          <td>swing_count_1h</td>
+          <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>271</td>
-          <td>50.2%</td>
-          <td>44.3%</td>
+          <td>902</td>
+          <td>47.7%</td>
+          <td>44.4%</td>
           <td>no</td>
-          <td class="neg">-$49.49</td>
+          <td class="neg">-$75.82</td>
         </tr>
         <tr>
           <td>variance_of_variance_sw20_vw120_vov-high_lvl-high_SHORT@1h</td>
@@ -1410,11 +1409,23 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>3283</td>
+          <td>3308</td>
           <td>45.8%</td>
           <td>44.1%</td>
           <td>no</td>
-          <td class="neg">-$30.04</td>
+          <td class="neg">-$33.62</td>
+        </tr>
+        <tr>
+          <td>price_acceleration_w20_slopedn_strong_accel_LONG@1h</td>
+          <td>price_acceleration_1h</td>
+          <td class="pos">LONG</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>272</td>
+          <td>50.0%</td>
+          <td>44.1%</td>
+          <td>no</td>
+          <td class="neg">-$50.26</td>
         </tr>
         <tr>
           <td>runlength_entropy_w256_high_U_LONG@1h</td>
@@ -1422,23 +1433,11 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="pos">LONG</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>351</td>
+          <td>347</td>
           <td>49.3%</td>
           <td>44.1%</td>
           <td>no</td>
-          <td class="neg">-$49.75</td>
-        </tr>
-        <tr>
-          <td>swing_HH12_t5_SHORT@1h</td>
-          <td>swing_count_1h</td>
-          <td class="neg">SHORT</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>913</td>
-          <td>47.1%</td>
-          <td>43.9%</td>
-          <td>no</td>
-          <td class="neg">-$104.06</td>
+          <td class="neg">-$49.14</td>
         </tr>
         <tr>
           <td>variance_of_variance_sw20_vw60_vov-low_lvl-high_SHORT@1h</td>
@@ -1489,6 +1488,18 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="pos">+$15.21</td>
         </tr>
         <tr>
+          <td>hour_11_SHORT@15m</td>
+          <td>time_of_day_15m</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>640</td>
+          <td>47.5%</td>
+          <td>43.7%</td>
+          <td>no</td>
+          <td class="neg">-$66.74</td>
+        </tr>
+        <tr>
           <td>mean_reversion_halflife_w60_explosive_SHORT@1h</td>
           <td>mean_reversion_halflife_1h</td>
           <td class="neg">SHORT</td>
@@ -1501,16 +1512,16 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$34.20</td>
         </tr>
         <tr>
-          <td>runlength_entropy_w256_high_D_LONG@1h</td>
-          <td>runlength_entropy_1h</td>
-          <td class="pos">LONG</td>
+          <td>adx15-25_di10-99_SHORT@1h</td>
+          <td>adx_trend_1h</td>
+          <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>307</td>
-          <td>49.2%</td>
+          <td>527</td>
+          <td>47.8%</td>
           <td>43.6%</td>
           <td>no</td>
-          <td class="neg">-$25.12</td>
+          <td class="neg">-$35.93</td>
         </tr>
         <tr>
           <td>madist_w100_b7_SHORT@1h</td>
@@ -1525,6 +1536,30 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$112.69</td>
         </tr>
         <tr>
+          <td>swing_HH24_t5_SHORT@1h</td>
+          <td>swing_count_1h</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>1775</td>
+          <td>45.8%</td>
+          <td>43.5%</td>
+          <td>no</td>
+          <td class="neg">-$162.22</td>
+        </tr>
+        <tr>
+          <td>variance_of_variance_sw10_vw30_vov-mid_lvl-mid_LONG@1h</td>
+          <td>variance_of_variance_1h</td>
+          <td class="pos">LONG</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>1977</td>
+          <td>45.7%</td>
+          <td>43.5%</td>
+          <td>no</td>
+          <td class="neg">-$141.05</td>
+        </tr>
+        <tr>
           <td>rsi70-100_z1-2_SHORT@1h</td>
           <td>indicator_band_1h</td>
           <td class="neg">SHORT</td>
@@ -1534,43 +1569,7 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>50.2%</td>
           <td>43.5%</td>
           <td>no</td>
-          <td class="neg">-$23.29</td>
-        </tr>
-        <tr>
-          <td>adx15-25_di10-99_SHORT@1h</td>
-          <td>adx_trend_1h</td>
-          <td class="neg">SHORT</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>529</td>
-          <td>47.6%</td>
-          <td>43.4%</td>
-          <td>no</td>
-          <td class="neg">-$38.98</td>
-        </tr>
-        <tr>
-          <td>hour_11_SHORT@15m</td>
-          <td>time_of_day_15m</td>
-          <td class="neg">SHORT</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>640</td>
-          <td>47.2%</td>
-          <td>43.3%</td>
-          <td>no</td>
-          <td class="neg">-$75.88</td>
-        </tr>
-        <tr>
-          <td>variance_of_variance_sw10_vw30_vov-mid_lvl-mid_LONG@1h</td>
-          <td>variance_of_variance_1h</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>1986</td>
-          <td>45.5%</td>
-          <td>43.3%</td>
-          <td>no</td>
-          <td class="neg">-$152.58</td>
+          <td class="neg">-$25.19</td>
         </tr>
         <tr>
           <td>swing_HH48_t3_SHORT@1h</td>
@@ -1578,11 +1577,47 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>4105</td>
-          <td>44.8%</td>
+          <td>4119</td>
+          <td>45.0%</td>
+          <td>43.4%</td>
+          <td>no</td>
+          <td class="neg">-$497.99</td>
+        </tr>
+        <tr>
+          <td>runlength_entropy_w256_high_D_LONG@1h</td>
+          <td>runlength_entropy_1h</td>
+          <td class="pos">LONG</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>304</td>
+          <td>49.0%</td>
+          <td>43.4%</td>
+          <td>no</td>
+          <td class="neg">-$26.88</td>
+        </tr>
+        <tr>
+          <td>madist_w20_b2_LONG@5m</td>
+          <td>ma_distance_5m</td>
+          <td class="pos">LONG</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>146</td>
+          <td>51.4%</td>
           <td>43.3%</td>
           <td>no</td>
-          <td class="neg">-$535.36</td>
+          <td class="pos">+$4.89</td>
+        </tr>
+        <tr>
+          <td>variance_of_variance_sw20_vw60_vov-low_lvl-mid_SHORT@1h</td>
+          <td>variance_of_variance_1h</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>3692</td>
+          <td>44.9%</td>
+          <td>43.3%</td>
+          <td>no</td>
+          <td class="neg">-$36.78</td>
         </tr>
         <tr>
           <td>madist_w80_b7_SHORT@1h</td>
@@ -1595,18 +1630,6 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>43.3%</td>
           <td>no</td>
           <td class="neg">-$90.11</td>
-        </tr>
-        <tr>
-          <td>swing_HH24_t5_SHORT@1h</td>
-          <td>swing_count_1h</td>
-          <td class="neg">SHORT</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>1791</td>
-          <td>45.5%</td>
-          <td>43.2%</td>
-          <td>no</td>
-          <td class="neg">-$167.44</td>
         </tr>
         <tr>
           <td>skew_burst_w80_strong_neg_LONG@1h</td>
@@ -1638,23 +1661,11 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>4972</td>
-          <td>44.5%</td>
+          <td>4940</td>
+          <td>44.4%</td>
           <td>43.1%</td>
           <td>no</td>
-          <td class="neg">-$669.40</td>
-        </tr>
-        <tr>
-          <td>variance_of_variance_sw20_vw60_vov-low_lvl-mid_SHORT@1h</td>
-          <td>variance_of_variance_1h</td>
-          <td class="neg">SHORT</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>3696</td>
-          <td>44.7%</td>
-          <td>43.1%</td>
-          <td>no</td>
-          <td class="neg">-$74.24</td>
+          <td class="neg">-$650.36</td>
         </tr>
         <tr>
           <td>rsi30-40_z-2--1_LONG@1h</td>
@@ -1669,6 +1680,18 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$233.01</td>
         </tr>
         <tr>
+          <td>kurtosis_burst_w100_extreme_fat_SHORT@1h</td>
+          <td>kurtosis_burst_1h</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>1361</td>
+          <td>45.6%</td>
+          <td>43.0%</td>
+          <td>no</td>
+          <td class="neg">-$289.38</td>
+        </tr>
+        <tr>
           <td>price_acceleration_w10_slopeup_strong_decel_SHORT@1h</td>
           <td>price_acceleration_1h</td>
           <td class="neg">SHORT</td>
@@ -1679,6 +1702,18 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>42.8%</td>
           <td>no</td>
           <td class="neg">-$43.54</td>
+        </tr>
+        <tr>
+          <td>kurtosis_burst_w50_mild_fat_SHORT@1h</td>
+          <td>kurtosis_burst_1h</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>2217</td>
+          <td>44.8%</td>
+          <td>42.7%</td>
+          <td>no</td>
+          <td class="neg">-$49.04</td>
         </tr>
         <tr>
           <td>madist_w100_b9_SHORT@15m</td>
@@ -1693,30 +1728,6 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$47.32</td>
         </tr>
         <tr>
-          <td>kurtosis_burst_w50_mild_fat_SHORT@1h</td>
-          <td>kurtosis_burst_1h</td>
-          <td class="neg">SHORT</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>2215</td>
-          <td>44.7%</td>
-          <td>42.7%</td>
-          <td>no</td>
-          <td class="neg">-$53.44</td>
-        </tr>
-        <tr>
-          <td>madist_w30_b2_LONG@5m</td>
-          <td>ma_distance_5m</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>285</td>
-          <td>48.4%</td>
-          <td>42.7%</td>
-          <td>no</td>
-          <td class="pos">+$2.34</td>
-        </tr>
-        <tr>
           <td>price_acceleration_w10_slopedn_accel_SHORT@1h</td>
           <td>price_acceleration_1h</td>
           <td class="neg">SHORT</td>
@@ -1729,18 +1740,6 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$24.03</td>
         </tr>
         <tr>
-          <td>kurtosis_burst_w100_extreme_fat_SHORT@1h</td>
-          <td>kurtosis_burst_1h</td>
-          <td class="neg">SHORT</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>1376</td>
-          <td>45.3%</td>
-          <td>42.7%</td>
-          <td>no</td>
-          <td class="neg">-$308.12</td>
-        </tr>
-        <tr>
           <td>madist_w200_b10_SHORT@15m</td>
           <td>ma_distance_15m</td>
           <td class="neg">SHORT</td>
@@ -1751,6 +1750,30 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>42.6%</td>
           <td>no</td>
           <td class="pos">+$4.31</td>
+        </tr>
+        <tr>
+          <td>swing_HH12_t3_SHORT@1h</td>
+          <td>swing_count_1h</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>2605</td>
+          <td>44.5%</td>
+          <td>42.6%</td>
+          <td>no</td>
+          <td class="neg">-$207.68</td>
+        </tr>
+        <tr>
+          <td>madist_w30_b7_SHORT@1h</td>
+          <td>ma_distance_1h</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>1225</td>
+          <td>45.3%</td>
+          <td>42.5%</td>
+          <td>no</td>
+          <td class="neg">-$95.91</td>
         </tr>
         <tr>
           <td>variance_of_variance_sw20_vw120_vov-mid_lvl-high_LONG@1h</td>
@@ -1777,40 +1800,40 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$63.54</td>
         </tr>
         <tr>
-          <td>madist_w30_b7_SHORT@1h</td>
+          <td>madist_w30_b8_SHORT@1h</td>
           <td>ma_distance_1h</td>
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1226</td>
-          <td>45.3%</td>
-          <td>42.5%</td>
+          <td>961</td>
+          <td>45.5%</td>
+          <td>42.3%</td>
           <td>no</td>
-          <td class="neg">-$97.98</td>
+          <td class="neg">-$134.72</td>
         </tr>
         <tr>
-          <td>volpricediv_w100_abspos_sgnneutral_SHORT@1h</td>
-          <td>volume_price_divergence_1h</td>
+          <td>variance_of_variance_sw20_vw30_vov-low_lvl-mid_SHORT@1h</td>
+          <td>variance_of_variance_1h</td>
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>4964</td>
-          <td>43.8%</td>
-          <td>42.4%</td>
+          <td>3720</td>
+          <td>43.9%</td>
+          <td>42.3%</td>
           <td>no</td>
-          <td class="neg">-$477.14</td>
+          <td class="neg">-$297.02</td>
         </tr>
         <tr>
-          <td>swing_HH12_t3_SHORT@1h</td>
-          <td>swing_count_1h</td>
+          <td>madist_w10_b8_SHORT@1h</td>
+          <td>ma_distance_1h</td>
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>2615</td>
-          <td>44.3%</td>
-          <td>42.4%</td>
+          <td>363</td>
+          <td>47.4%</td>
+          <td>42.3%</td>
           <td>no</td>
-          <td class="neg">-$228.74</td>
+          <td class="neg">-$49.29</td>
         </tr>
         <tr>
           <td>rsi60-70_z1-2_SHORT@1h</td>
@@ -1818,23 +1841,35 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>839</td>
+          <td>837</td>
           <td>45.6%</td>
           <td>42.3%</td>
           <td>no</td>
-          <td class="neg">-$98.18</td>
+          <td class="neg">-$96.42</td>
         </tr>
         <tr>
-          <td>skew_burst_w160_neg_LONG@1h</td>
-          <td>skew_burst_1h</td>
-          <td class="pos">LONG</td>
+          <td>volpricediv_w100_abspos_sgnneutral_SHORT@1h</td>
+          <td>volume_price_divergence_1h</td>
+          <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>2599</td>
-          <td>44.2%</td>
+          <td>4949</td>
+          <td>43.7%</td>
           <td>42.3%</td>
           <td>no</td>
-          <td class="neg">-$497.19</td>
+          <td class="neg">-$486.32</td>
+        </tr>
+        <tr>
+          <td>skew_burst_w160_strong_neg_SHORT@1h</td>
+          <td>skew_burst_1h</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>1375</td>
+          <td>44.9%</td>
+          <td>42.3%</td>
+          <td>no</td>
+          <td class="neg">-$65.93</td>
         </tr>
         <tr>
           <td>variance_of_variance_sw10_vw60_vov-high_lvl-low_LONG@1h</td>
@@ -1849,16 +1884,16 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$47.23</td>
         </tr>
         <tr>
-          <td>body_-1_0_SHORT@1h</td>
-          <td>body_size_1h</td>
-          <td class="neg">SHORT</td>
+          <td>madist_w80_b1_LONG@15m</td>
+          <td>ma_distance_15m</td>
+          <td class="pos">LONG</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>478</td>
-          <td>46.7%</td>
+          <td>476</td>
+          <td>46.6%</td>
           <td>42.2%</td>
           <td>no</td>
-          <td class="pos">+$18.13</td>
+          <td class="neg">-$52.60</td>
         </tr>
         <tr>
           <td>hurst_exponent_band_w128_tr_strong_SHORT@1h</td>
@@ -1873,28 +1908,28 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$26.53</td>
         </tr>
         <tr>
+          <td>madist_w20_b4_SHORT@1h</td>
+          <td>ma_distance_1h</td>
+          <td class="neg">SHORT</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>1504</td>
+          <td>44.7%</td>
+          <td>42.2%</td>
+          <td>no</td>
+          <td class="neg">-$135.69</td>
+        </tr>
+        <tr>
           <td>variance_of_variance_sw10_vw120_vov-mid_lvl-mid_SHORT@1h</td>
           <td>variance_of_variance_1h</td>
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1882</td>
+          <td>1880</td>
           <td>44.4%</td>
           <td>42.2%</td>
           <td>no</td>
-          <td class="neg">-$105.89</td>
-        </tr>
-        <tr>
-          <td>kurtosis_burst_w100_gaussian_LONG@1h</td>
-          <td>kurtosis_burst_1h</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>3739</td>
-          <td>43.8%</td>
-          <td>42.2%</td>
-          <td>no</td>
-          <td class="neg">-$1,007.46</td>
+          <td class="neg">-$106.09</td>
         </tr>
         <tr>
           <td>kurtosis_burst_w50_extreme_fat_SHORT@1h</td>
@@ -1921,40 +1956,52 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td class="neg">-$292.56</td>
         </tr>
         <tr>
-          <td>variance_of_variance_sw20_vw30_vov-low_lvl-mid_SHORT@1h</td>
-          <td>variance_of_variance_1h</td>
+          <td>skew_burst_w160_neg_LONG@1h</td>
+          <td>skew_burst_1h</td>
+          <td class="pos">LONG</td>
+          <td><span class="pill tier-candidate">candidate</span></td>
+          <td>0</td>
+          <td>2586</td>
+          <td>44.0%</td>
+          <td>42.1%</td>
+          <td>no</td>
+          <td class="neg">-$502.56</td>
+        </tr>
+        <tr>
+          <td>mean_reversion_halflife_w120_fast_SHORT@1h</td>
+          <td>mean_reversion_halflife_1h</td>
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>3721</td>
+          <td>3659</td>
           <td>43.7%</td>
           <td>42.1%</td>
           <td>no</td>
-          <td class="neg">-$339.66</td>
+          <td class="neg">-$315.09</td>
         </tr>
         <tr>
-          <td>madist_w10_b8_SHORT@1h</td>
-          <td>ma_distance_1h</td>
+          <td>body_-1_0_SHORT@1h</td>
+          <td>body_size_1h</td>
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>365</td>
-          <td>47.1%</td>
+          <td>477</td>
+          <td>46.5%</td>
           <td>42.1%</td>
           <td>no</td>
-          <td class="neg">-$49.55</td>
+          <td class="pos">+$17.93</td>
         </tr>
         <tr>
-          <td>madist_w20_b4_SHORT@1h</td>
-          <td>ma_distance_1h</td>
+          <td>swing_HH24_t3_SHORT@1h</td>
+          <td>swing_count_1h</td>
           <td class="neg">SHORT</td>
           <td><span class="pill tier-candidate">candidate</span></td>
           <td>0</td>
-          <td>1507</td>
-          <td>44.5%</td>
-          <td>42.0%</td>
+          <td>3353</td>
+          <td>43.7%</td>
+          <td>42.1%</td>
           <td>no</td>
-          <td class="neg">-$149.18</td>
+          <td class="neg">-$472.71</td>
         </tr>
         <tr>
           <td>swing_LL24_t5_SHORT@1h</td>
@@ -1967,42 +2014,6 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>42.0%</td>
           <td>no</td>
           <td class="neg">-$20.84</td>
-        </tr>
-        <tr>
-          <td>variance_of_variance_sw20_vw120_vov-high_lvl-mid_LONG@1h</td>
-          <td>variance_of_variance_1h</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>2500</td>
-          <td>44.0%</td>
-          <td>42.0%</td>
-          <td>no</td>
-          <td class="neg">-$489.12</td>
-        </tr>
-        <tr>
-          <td>madist_w10_b3_LONG@5m</td>
-          <td>ma_distance_5m</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>415</td>
-          <td>46.7%</td>
-          <td>42.0%</td>
-          <td>no</td>
-          <td class="neg">-$23.15</td>
-        </tr>
-        <tr>
-          <td>volpricediv_w100_absneutral_sgnneutral_LONG@1h</td>
-          <td>volume_price_divergence_1h</td>
-          <td class="pos">LONG</td>
-          <td><span class="pill tier-candidate">candidate</span></td>
-          <td>0</td>
-          <td>1624</td>
-          <td>44.4%</td>
-          <td>42.0%</td>
-          <td>no</td>
-          <td class="neg">-$306.70</td>
         </tr></tbody>
       </table>
     </div></div>
