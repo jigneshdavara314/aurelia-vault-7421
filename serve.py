@@ -47,11 +47,17 @@ def tick_trade() -> None:
     cost_bps = gcfg.paper_fee_bps + gcfg.paper_slippage_bps + 5
     scfg = config.profile(gcfg.profile)
     bankroll.init_bankroll(strategy=None, mode="PAPER")
+    from btcbot import store
     for s in strat_objs:
         bankroll.init_bankroll(strategy=s.name, mode="PAPER")
         sig = s.evaluate(snap, scfg.for_regime(regime), cost_bps)
         if sig is None:
+            store.record_signal_event(now_ts, s.name, gcfg.symbol,
+                                       "evaluated_no_signal", "")
             continue
+        store.record_signal_event(now_ts, s.name, gcfg.symbol,
+                                   "signal_emitted",
+                                   f"side={sig.side} edge={sig.edge:.4f}")
         gate = engine.run_gates(sig, ex, now_ts)
         if not gate.ok:
             logging.info("gate blocked: %s %s", gate.gate, gate.reason)
@@ -62,6 +68,9 @@ def tick_trade() -> None:
         try:
             ex_obj = executor.Executor(ex)
             result = ex_obj.execute(sig)
+            store.record_signal_event(now_ts, s.name, gcfg.symbol,
+                                       "signal_filled",
+                                       f"trade_id={result.get('trade_id')}")
             logging.info("trade opened: %s", result)
         except Exception as exc:
             logging.error("executor error: %s", exc)

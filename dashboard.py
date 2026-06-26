@@ -274,6 +274,56 @@ def _edge_panel(rep: dict) -> str:
     """
 
 
+def _signal_table(sig_24h: list[dict], sig_7d: list[dict]) -> str:
+    """Per-strategy signal emission counts."""
+    if not sig_24h and not sig_7d:
+        return ('<div class="note">No signal events recorded yet. '
+                'Signal-emission telemetry was added in the latest deployment '
+                '— it will populate on the next cron tick.</div>')
+    rows_by_name: dict[str, dict] = {}
+    for r in sig_7d:
+        rows_by_name[r["strategy"]] = {
+            "strategy": r["strategy"], "n_none_7d": r["n_none"] or 0,
+            "n_emit_7d": r["n_emit"] or 0, "n_fill_7d": r["n_fill"] or 0,
+        }
+    for r in sig_24h:
+        d = rows_by_name.setdefault(r["strategy"], {"strategy": r["strategy"]})
+        d["n_none_24h"] = r["n_none"] or 0
+        d["n_emit_24h"] = r["n_emit"] or 0
+        d["n_fill_24h"] = r["n_fill"] or 0
+    body = []
+    for d in sorted(rows_by_name.values(), key=lambda x: x["strategy"]):
+        emit_24 = d.get("n_emit_24h", 0)
+        fill_24 = d.get("n_fill_24h", 0)
+        eval_24 = d.get("n_none_24h", 0) + emit_24
+        emit_cls = "pos" if emit_24 > 0 else ""
+        body.append(f"""
+        <tr>
+          <td>{html.escape(d['strategy'])}</td>
+          <td>{eval_24}</td>
+          <td class="{emit_cls}">{emit_24}</td>
+          <td>{fill_24}</td>
+          <td>{d.get('n_emit_7d', 0)}</td>
+          <td>{d.get('n_fill_7d', 0)}</td>
+        </tr>""")
+    return f"""
+      <div class="note">If "Emitted (24h)" is 0 for all strategies, gates aren't
+      the problem — the strategies' own entry conditions aren't matching the
+      current tape. If "Emitted" &gt; 0 but "Filled" = 0, check the Gates tab to
+      see which gate is blocking.</div>
+      <table class="t">
+        <thead><tr><th>strategy</th>
+        <th>Evaluated (24h)</th>
+        <th>Emitted (24h)</th>
+        <th>Filled (24h)</th>
+        <th>Emitted (7d)</th>
+        <th>Filled (7d)</th>
+        </tr></thead>
+        <tbody>{''.join(body)}</tbody>
+      </table>
+    """
+
+
 def _patterns_table(rows: list[dict]) -> str:
     if not rows:
         return ('<div class="note">Pattern miner has not produced a state file yet. '
@@ -471,6 +521,9 @@ def _gather() -> dict:
     discoveries = discover.list_variants()
     mined_patterns = patterns.list_patterns()
     rep = edge_report.report(since_days=30)
+    now_ms = config.time_now_ms()
+    sig_24h = store.signal_summary(since_ms=now_ms - 24 * 3600 * 1000)
+    sig_7d = store.signal_summary(since_ms=now_ms - 7 * 24 * 3600 * 1000)
     return {
         "cfg": cfg, "summary": summary, "open_pos": open_pos,
         "by_strat": by_strat, "state": state, "settled": settled,
@@ -478,6 +531,8 @@ def _gather() -> dict:
         "discoveries": discoveries,
         "patterns": mined_patterns,
         "edge_report": rep,
+        "sig_24h": sig_24h,
+        "sig_7d": sig_7d,
     }
 
 
@@ -570,6 +625,10 @@ def build_html() -> str:
     <div class="card">
       <h2>Per-strategy performance</h2>
       {_strategy_bars(by_strat)}
+    </div>
+    <div class="card">
+      <h2>Signal emission (last 24h)</h2>
+      {_signal_table(d['sig_24h'], d['sig_7d'])}
     </div>
     """
 

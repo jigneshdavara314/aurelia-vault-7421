@@ -14,10 +14,10 @@ class NSigmaFade(Strategy):
         "ema_50": {"fn": "ema", "args": {"n": 50}},
         "ema_200": {"fn": "ema", "args": {"n": 200}},
     }
-    Z_THRESH = 1.0
-    SL_ATR = 0.8
-    TP_ATR = 1.2
-    HORIZON_BARS = 12
+    Z_THRESH = 0.7
+    SL_ATR = 1.5
+    TP_ATR = 2.5
+    HORIZON_BARS = 24
     BASE_PRED = 0.53
 
     def evaluate(self, snap, cfg, cost_bps):

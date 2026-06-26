@@ -132,6 +132,18 @@ SCHEMA = [
         pred_p_up REAL
     )
     """,
+    """
+    CREATE TABLE IF NOT EXISTS signal_events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ts INTEGER NOT NULL,
+        strategy TEXT NOT NULL,
+        symbol TEXT NOT NULL,
+        outcome TEXT NOT NULL,
+        reason TEXT
+    )
+    """,
+    "CREATE INDEX IF NOT EXISTS idx_signal_events_ts ON signal_events(ts)",
+    "CREATE INDEX IF NOT EXISTS idx_signal_events_strategy ON signal_events(strategy, ts)",
     "CREATE INDEX IF NOT EXISTS idx_gate_failures_ts ON gate_failures(ts)",
 ]
 
@@ -231,16 +243,10 @@ def settle_and_credit(
             gross = qty * (entry - exit_price)
         pnl = gross - fee_usd - slippage_usd
 
-        if exit_reason == "TP":
-            status = "WON"
-        elif exit_reason == "SL":
-            status = "LOST"
+        if exit_reason == "VOID":
+            status = "VOID"
         elif exit_reason == "TIMEOUT":
             status = "TIMEOUT"
-        elif exit_reason == "VOID":
-            status = "VOID"
-        elif exit_reason == "MANUAL":
-            status = "WON" if pnl > 0 else "LOST"
         else:
             status = "WON" if pnl > 0 else "LOST"
 
@@ -445,6 +451,45 @@ def record_gate_failure(
             """,
             (ts, strategy, symbol, gate, reason, size_usd, pred_p_up),
         )
+
+
+def record_signal_event(
+    ts: int, strategy: str, symbol: str, outcome: str, reason: str = "",
+) -> None:
+    """outcome: 'evaluated_no_signal' | 'signal_emitted' | 'signal_filled'"""
+    with conn_ctx() as c, tx(c):
+        c.execute(
+            "INSERT INTO signal_events (ts, strategy, symbol, outcome, reason) VALUES (?, ?, ?, ?, ?)",
+            (ts, strategy, symbol, outcome, reason),
+        )
+
+
+def signal_summary(since_ms: int, strategy: str | None = None) -> list[dict[str, Any]]:
+    """Per-strategy signal-emission counts since `since_ms`."""
+    with conn_ctx() as c:
+        if strategy is None:
+            rows = c.execute(
+                """
+                SELECT strategy,
+                       SUM(CASE WHEN outcome='evaluated_no_signal' THEN 1 ELSE 0 END) AS n_none,
+                       SUM(CASE WHEN outcome='signal_emitted'      THEN 1 ELSE 0 END) AS n_emit,
+                       SUM(CASE WHEN outcome='signal_filled'       THEN 1 ELSE 0 END) AS n_fill
+                FROM signal_events WHERE ts >= ?
+                GROUP BY strategy ORDER BY strategy
+                """, (int(since_ms),),
+            ).fetchall()
+        else:
+            rows = c.execute(
+                """
+                SELECT strategy,
+                       SUM(CASE WHEN outcome='evaluated_no_signal' THEN 1 ELSE 0 END) AS n_none,
+                       SUM(CASE WHEN outcome='signal_emitted'      THEN 1 ELSE 0 END) AS n_emit,
+                       SUM(CASE WHEN outcome='signal_filled'       THEN 1 ELSE 0 END) AS n_fill
+                FROM signal_events WHERE ts >= ? AND strategy = ?
+                GROUP BY strategy
+                """, (int(since_ms), strategy),
+            ).fetchall()
+        return [dict(r) for r in rows]
 
 
 def query_trades(filters: dict, limit: int = 500) -> list[dict[str, Any]]:

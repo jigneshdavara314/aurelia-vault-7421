@@ -582,19 +582,29 @@ def _maybe_promote(state: dict[str, Any], hit: PatternHit, holds_out: bool,
         "passes": _passes_bar(hit), "holds_out": holds_out,
     })
     pat["history"] = pat["history"][-30:]
-    if _passes_bar(hit) and holds_out:
+    # Track in-window pass: just _passes_bar (no holdout requirement)
+    if _passes_bar(hit):
         pat["pass_streak"] += 1
     else:
         pat["pass_streak"] = 0
 
     promoted = False
-    if (pat["pass_streak"] >= CONSECUTIVE_RUNS_TO_PROMOTE
-            and pat["tier"] != "active"):
-        pat["tier"] = "active"
-        pat["promoted_at"] = now_ts
-        promoted = True
-        _log({"event": "promote", "pattern": hit.name, "wlb": hit.wilson_lower,
-              "n": hit.n, "side": hit.side, "ts": now_ts})
+    # Tiered promotion:
+    #   - Trial: 2 consecutive in-window passes (smaller stake via self_improve)
+    #   - Active: trial + holdout pass on same run (full stake)
+    if pat["pass_streak"] >= CONSECUTIVE_RUNS_TO_PROMOTE:
+        prev_tier = pat["tier"]
+        if holds_out and pat["tier"] != "active":
+            pat["tier"] = "active"
+            pat["promoted_at"] = now_ts
+            promoted = True
+            _log({"event": "promote_to_active", "pattern": hit.name,
+                  "wlb": hit.wilson_lower, "n": hit.n, "side": hit.side, "ts": now_ts})
+        elif pat["tier"] == "candidate":
+            pat["tier"] = "trial"
+            pat["promoted_at"] = now_ts
+            _log({"event": "promote_to_trial", "pattern": hit.name,
+                  "wlb": hit.wilson_lower, "n": hit.n, "side": hit.side, "ts": now_ts})
     elif _passes_bar(hit):
         pat["tier"] = "trial"
     return promoted

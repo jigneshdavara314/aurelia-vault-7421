@@ -15,9 +15,9 @@ class MomentumEmaCross(Strategy):
     }
     BASE_PRED = 0.53
     HORIZON_BARS = 36
-    SL_ATR = 1.2
-    TP_ATR = 2.5
-    PULLBACK_ATR = 2.0
+    SL_ATR = 1.5
+    TP_ATR = 3.5
+    PULLBACK_ATR = 3.0
 
     def evaluate(self, snap, cfg, cost_bps):
         ind = snap.indicators

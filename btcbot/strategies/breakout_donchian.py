@@ -14,10 +14,10 @@ class BreakoutDonchian(Strategy):
         "ema_200": {"fn": "ema", "args": {"n": 200}},
     }
     BASE_PRED = 0.53
-    HORIZON_BARS = 24
-    SL_ATR = 1.0
-    TP_ATR = 1.8
-    BREAKOUT_BUFFER = 0.001
+    HORIZON_BARS = 36
+    SL_ATR = 1.5
+    TP_ATR = 3.0
+    BREAKOUT_BUFFER = 0.003
 
     def evaluate(self, snap, cfg, cost_bps):
         ind = snap.indicators
