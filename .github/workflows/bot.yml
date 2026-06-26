@@ -2,9 +2,10 @@ name: btcbot tick
 
 on:
   schedule:
-    - cron: "*/15 * * * *"   # every 15m. 3 ticks per 5m candle close — enough
-                             # to never miss a close, gated by already_open so
-                             # extra ticks within the same candle are no-ops.
+    - cron: "*/15 * * * *"   # GitHub's internal cron (best-effort; often throttled
+                             # to 1-3h cadence under load). Kept as a fallback.
+  repository_dispatch:        # External scheduler (cron-job.org) hits this every
+    types: [bot-tick]         # 5 min to bypass GitHub's cron throttling.
   workflow_dispatch:        # allows manual "Run workflow" from the Actions tab
   push:
     branches: [main]
