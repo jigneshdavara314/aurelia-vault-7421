@@ -241,7 +241,10 @@ def cmd_daily_report(args) -> int:
 
 
 def cmd_mine_patterns(args) -> int:
-    out = patterns.run()
+    if getattr(args, "light", False):
+        out = patterns.run_light()
+    else:
+        out = patterns.run()
     print(json.dumps(out, indent=2, default=str))
     return 0
 
@@ -341,7 +344,9 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("reconcile-live")
     sub.add_parser("discover")
     sub.add_parser("variants")
-    sub.add_parser("mine-patterns")
+    sp = sub.add_parser("mine-patterns")
+    sp.add_argument("--light", action="store_true",
+                    help="Light hunt — composite-predicates only, every cron tick")
     sub.add_parser("patterns")
     sp = sub.add_parser("edge-report")
     sp.add_argument("--since", default="30d")

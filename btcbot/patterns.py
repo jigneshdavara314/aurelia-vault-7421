@@ -1386,6 +1386,73 @@ def _mine_one_timeframe(df: pd.DataFrame, tf: str, all_hits: list[PatternHit],
             all_hits.append(h_tagged)
 
 
+def run_light(symbol: str | None = None) -> dict[str, Any]:
+    """Light, fast pattern hunt. Runs every cron tick (not daily).
+
+    Pulls ~30 days of 5m data (one REST page = fast), runs ONLY the
+    composite_predicates miner with a fresh light_seed so new pattern names
+    genuinely appear in the DB every cron tick (up to once per 10-min bucket
+    to prevent overlapping cron runs from double-mining).
+    """
+    cfg = config.load(force=True)
+    symbol = symbol or cfg.symbol
+    state = _load_state()
+    now_ts = config.time_now_ms()
+    bucket_10min = now_ts // (10 * 60 * 1000)
+    if state.get("last_light_bucket") == bucket_10min:
+        log.info("LIGHT mining: already ran this 10-min bucket; skipping")
+        return {"skipped": True, "bucket": bucket_10min}
+
+    log.info("LIGHT mining: composite predicates on 5m 30d window")
+    df = _fetch(symbol, "5m", 8640)
+    if df.empty or len(df) < 500:
+        log.warning("LIGHT mining: not enough data (%d bars)", len(df))
+        return {"error": "no_data", "bars": len(df)}
+
+    light_seed = int(state.get("light_seed", 0))
+    new_hits: list[PatternHit] = []
+    try:
+        hits = mine_composite_predicates(df, day_seed=light_seed)
+    except Exception as exc:
+        log.warning("LIGHT mining: composite miner errored: %s", exc)
+        return {"error": str(exc)}
+    for h in hits:
+        new_hits.append(PatternHit(
+            name=f"{h.name}@5m_L{light_seed}",
+            family="composite_predicates_5m_light",
+            side=h.side, n=h.n, wins=h.wins, win_rate=h.win_rate,
+            wilson_lower=h.wilson_lower, wilson_upper=h.wilson_upper,
+            mean_return_bps=h.mean_return_bps, net_pnl=h.net_pnl,
+            params={**h.params, "timeframe": "5m", "light_seed": light_seed},
+        ))
+
+    pre_existing = set(state.get("patterns", {}).keys())
+    promoted: list[str] = []
+    for hit in new_hits:
+        if _maybe_promote(state, hit, holds_out=False, now_ts=now_ts):
+            promoted.append(hit.name)
+    new_names = [h.name for h in new_hits if h.name not in pre_existing]
+
+    state["last_light_bucket"] = bucket_10min
+    state["last_light_ts"] = now_ts
+    state["light_seed"] = light_seed + 1
+    state["last_light_new_count"] = len(new_names)
+    state["cumulative_light_new"] = state.get("cumulative_light_new", 0) + len(new_names)
+    _save_state(state)
+
+    summary = {
+        "mode": "LIGHT",
+        "bucket_10min": bucket_10min,
+        "patterns_tested": len(new_hits),
+        "new_pattern_names": len(new_names),
+        "cumulative_light_new": state["cumulative_light_new"],
+        "light_seed_used": light_seed,
+        "promoted_this_run": promoted,
+    }
+    _log({"event": "light_summary", "ts": now_ts, **summary})
+    return summary
+
+
 def run(symbol: str | None = None, timeframe: str | None = None,
         n_primary: int = LOOKBACK_BARS, n_holdout: int = HELD_OUT_BARS) -> dict[str, Any]:
     cfg = config.load(force=True)

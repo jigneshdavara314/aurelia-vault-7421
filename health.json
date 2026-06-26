@@ -1,23 +1,24 @@
 {
-  "ts": 1782463689429,
+  "ts": 1782464274372,
   "today_utc": "2026-06-26",
   "score": 9,
   "max_score": 10,
   "failures": [],
   "warnings": [
+    "patterns: last_run_day=None != today 2026-06-26 (may run later today)",
     "strategy breakout_donchian: 0 emissions in last 7d (suspect dormant)",
     "ladder: 0 cells have n>=8 (still accumulating samples)"
   ],
   "metrics": {
-    "patterns_total": 2382,
-    "patterns_last_run_day": "2026-06-26",
+    "patterns_total": 72,
+    "patterns_last_run_day": null,
     "patterns_new_today": 0,
     "patterns_cumulative_new": 0,
     "patterns_day_seed": 0,
     "patterns_by_tier": {
-      "trial": 3,
+      "trial": 0,
       "active": 0,
-      "candidate": 2379
+      "candidate": 72
     },
     "discoveries_total": 60,
     "discoveries_last_run_day": "2026-06-26",
@@ -30,9 +31,6 @@
       "breakout_donchian": 0,
       "momentum_ema_cross": 4,
       "nsigma_fade": 2
-    },
-    "ladder_cells_total": 9,
-    "ladder_cells_with_trades": 9,
-    "ladder_cells_evaluable": 0
+    }
   }
 }

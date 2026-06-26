@@ -65,8 +65,11 @@ jobs:
       - name: Strategy discovery (idempotent within day)
         run: python run.py discover || true
 
-      - name: Pattern mining (idempotent within day)
+      - name: Pattern mining HEAVY (daily, 21 families x 3 timeframes)
         run: python run.py mine-patterns || true
+
+      - name: Pattern mining LIGHT (every tick, composite predicates only)
+        run: python run.py mine-patterns --light || true
 
       - name: Write daily edge report
         run: python run.py daily-report || true
@@ -80,31 +83,83 @@ jobs:
       - name: Show status (for the run log)
         run: python run.py status
 
-      - name: Commit DB + dashboard back to repo
+      - name: Commit state back to repo (with merge-conflict-proof strategy)
         run: |
+          set -e
           git config user.name  "btcbot[bot]"
           git config user.email "btcbot@users.noreply.github.com"
+          # Register the 'merge=ours' driver referenced in .gitattributes.
+          # This makes git keep OUR version of generated state files on every
+          # merge/rebase, with NO conflict markers ever inserted.
+          git config merge.ours.driver true
+
+          # Stage and commit our generated state ONCE
           git add -f trades.db dashboard.html
-          if [ -f strategy_state.json ]; then git add -f strategy_state.json; fi
-          if [ -f self_improve_log.jsonl ]; then git add -f self_improve_log.jsonl; fi
-          if [ -f predictions.jsonl ]; then git add -f predictions.jsonl; fi
-          if [ -f discoveries.json ]; then git add -f discoveries.json; fi
-          if [ -f discovery_log.jsonl ]; then git add -f discovery_log.jsonl; fi
-          if [ -f patterns.json ]; then git add -f patterns.json; fi
-          if [ -f pattern_log.jsonl ]; then git add -f pattern_log.jsonl; fi
-          if [ -d reports ]; then git add -f reports/; fi
-          if [ -f health.json ]; then git add -f health.json; fi
+          [ -f strategy_state.json ] && git add -f strategy_state.json || true
+          [ -f self_improve_log.jsonl ] && git add -f self_improve_log.jsonl || true
+          [ -f predictions.jsonl ] && git add -f predictions.jsonl || true
+          [ -f discoveries.json ] && git add -f discoveries.json || true
+          [ -f discovery_log.jsonl ] && git add -f discovery_log.jsonl || true
+          [ -f patterns.json ] && git add -f patterns.json || true
+          [ -f pattern_log.jsonl ] && git add -f pattern_log.jsonl || true
+          [ -d reports ] && git add -f reports/ || true
+          [ -f health.json ] && git add -f health.json || true
           git add -f settings.json
           if git diff --cached --quiet; then
-            echo "no changes to commit"
+            echo "no changes to commit"; exit 0
+          fi
+          git commit -m "tick: $(date -u +'%Y-%m-%d %H:%M UTC')"
+
+          # Push with merge-conflict-proof rebase. If rebase has conflicts on
+          # generated artifacts (dashboard.html, trades.db, patterns.json,
+          # discoveries.json, strategy_state.json, health.json) — these are
+          # state files where OUR copy is the freshest valid truth, so we
+          # force-take ours via -Xours. Logs are append-only.
+          for i in 1 2 3; do
+            if git pull --rebase -Xours --autostash origin main 2>&1; then
+              if git push 2>&1; then
+                echo "push succeeded on attempt $i"
+                exit 0
+              fi
+            else
+              echo "rebase had a conflict — aborting and force-resolving"
+              git rebase --abort || true
+              # Force-take REMOTE on code/text files, force-take OURS on artifacts
+              git fetch origin
+              git reset --hard origin/main
+              echo "reset to origin; will re-stage our artifacts in next loop"
+              # Re-stage and re-commit our artifacts (now on top of clean main)
+              git add -f trades.db dashboard.html settings.json
+              [ -f strategy_state.json ] && git add -f strategy_state.json || true
+              [ -f self_improve_log.jsonl ] && git add -f self_improve_log.jsonl || true
+              [ -f predictions.jsonl ] && git add -f predictions.jsonl || true
+              [ -f discoveries.json ] && git add -f discoveries.json || true
+              [ -f discovery_log.jsonl ] && git add -f discovery_log.jsonl || true
+              [ -f patterns.json ] && git add -f patterns.json || true
+              [ -f pattern_log.jsonl ] && git add -f pattern_log.jsonl || true
+              [ -d reports ] && git add -f reports/ || true
+              [ -f health.json ] && git add -f health.json || true
+              if ! git diff --cached --quiet; then
+                git commit -m "tick (force-resolved): $(date -u +'%Y-%m-%d %H:%M UTC')"
+              fi
+            fi
+            echo "push attempt $i failed, retrying..."
+            sleep 5
+          done
+          echo "push failed after 3 retries (non-fatal)"
+
+      - name: Verify dashboard.html has no merge markers
+        run: |
+          if grep -E "^(<<<<<<<|=======|>>>>>>>)" dashboard.html > /dev/null 2>&1; then
+            echo "FATAL: dashboard.html contains merge conflict markers"
+            grep -n "^(<<<<<<<|=======|>>>>>>>)" dashboard.html | head -5
+            # Regenerate cleanly and commit a fix
+            python dashboard.py --write
+            git add -f dashboard.html
+            git commit -m "fix: regenerate dashboard.html (had merge markers)" || true
+            git push || true
           else
-            git commit -m "tick: $(date -u +'%Y-%m-%d %H:%M UTC')"
-            for i in 1 2 3; do
-              git pull --rebase --autostash origin main && git push && exit 0
-              echo "push attempt $i failed, retrying..."
-              sleep 5
-            done
-            echo "push failed after 3 retries (non-fatal)"
+            echo "dashboard.html is clean"
           fi
 
       - name: Prepare Pages artifact

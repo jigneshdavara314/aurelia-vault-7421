@@ -1,0 +1,15 @@
+# Generated state files: NEVER text-merge. The freshest copy is the truth.
+# 'merge=ours' tells git to always keep OUR version during a merge/rebase.
+dashboard.html      merge=ours
+trades.db           binary merge=ours
+patterns.json       merge=ours
+discoveries.json    merge=ours
+strategy_state.json merge=ours
+health.json         merge=ours
+settings.json       merge=ours
+# Append-only logs: same, use ours
+self_improve_log.jsonl    merge=ours
+discovery_log.jsonl       merge=ours
+pattern_log.jsonl         merge=ours
+predictions.jsonl         merge=ours
+reports/                  merge=ours
