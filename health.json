@@ -1,12 +1,11 @@
 {
-  "ts": 1782463587324,
+  "ts": 1782463689429,
   "today_utc": "2026-06-26",
   "score": 9,
   "max_score": 10,
   "failures": [],
   "warnings": [
     "strategy breakout_donchian: 0 emissions in last 7d (suspect dormant)",
-    "strategy nsigma_fade: 0 emissions in last 7d (suspect dormant)",
     "ladder: 0 cells have n>=8 (still accumulating samples)"
   ],
   "metrics": {
@@ -24,16 +23,16 @@
     "discoveries_last_run_day": "2026-06-26",
     "discoveries_days_run_count": 0,
     "discoveries_retired": 0,
-    "signal_events_24h": 4,
-    "signals_emitted_24h": 1,
-    "trades_opened_24h": 1,
+    "signal_events_24h": 15,
+    "signals_emitted_24h": 6,
+    "trades_opened_24h": 3,
     "emissions_by_strategy_7d": {
       "breakout_donchian": 0,
-      "momentum_ema_cross": 1,
-      "nsigma_fade": 0
+      "momentum_ema_cross": 4,
+      "nsigma_fade": 2
     },
-    "ladder_cells_total": 8,
-    "ladder_cells_with_trades": 8,
+    "ladder_cells_total": 9,
+    "ladder_cells_with_trades": 9,
     "ladder_cells_evaluable": 0
   }
 }
