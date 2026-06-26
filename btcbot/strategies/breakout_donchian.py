@@ -8,6 +8,7 @@ from .base import Strategy
 
 class BreakoutDonchian(Strategy):
     name = "breakout_donchian"
+    FAMILY = "breakout_donchian"
     required_indicators = {
         "atr_14": {"fn": "atr", "args": {"n": 14}},
         "ema_50": {"fn": "ema", "args": {"n": 50}},

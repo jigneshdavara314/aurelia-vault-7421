@@ -1250,6 +1250,81 @@ def mine_volume_price_divergence(df: pd.DataFrame) -> list[PatternHit]:
 
 
 
+# ---- family: composite_predicates (auto-expanding, day-rotating) ----------
+def mine_composite_predicates(df: pd.DataFrame, day_seed: int = 0) -> list[PatternHit]:
+    """Composes 2-3 primitive boolean predicates into NEW pattern keys each run.
+
+    Each day_seed produces a different rotation of predicate combinations,
+    so genuinely new pattern names appear in patterns.json over time
+    (vs. the fixed 21 hardcoded families).
+    """
+    out: list[PatternHit] = []
+    work = indicators.add_indicators(df, {
+        "ema_50": {"fn": "ema", "args": {"n": 50}},
+        "ema_200": {"fn": "ema", "args": {"n": 200}},
+        "rsi_14": {"fn": "rsi", "args": {"n": 14}},
+        "z_20": {"fn": "zscore", "args": {"n": 20}},
+        "atr_14": {"fn": "atr", "args": {"n": 14}},
+    })
+    close = work["close"]
+    rsi_v = work["rsi_14"].to_numpy()
+    z_v = work["z_20"].to_numpy()
+    above_ema50 = (close > work["ema_50"]).to_numpy()
+    above_ema200 = (close > work["ema_200"]).to_numpy()
+    body_pos = ((close - work["open"]) > 0).to_numpy()
+    range_pct = ((work["high"] - work["low"]) / close).to_numpy()
+    range_med = np.nanmedian(range_pct)
+    wide_bar = (range_pct > range_med * 1.5)
+    narrow_bar = (range_pct < range_med * 0.6)
+    # Day-rotated predicate library:
+    predicates = {
+        "rsi_low": rsi_v < 35,
+        "rsi_high": rsi_v > 65,
+        "rsi_mid": (rsi_v >= 45) & (rsi_v <= 55),
+        "z_neg": z_v < -1.0,
+        "z_pos": z_v > 1.0,
+        "above_ema50": above_ema50,
+        "below_ema50": ~above_ema50,
+        "above_ema200": above_ema200,
+        "below_ema200": ~above_ema200,
+        "bullish_bar": body_pos,
+        "bearish_bar": ~body_pos,
+        "wide_bar": wide_bar,
+        "narrow_bar": narrow_bar,
+    }
+    keys = sorted(predicates.keys())
+    # Rotating sample of ~40 distinct pair combos per day
+    import itertools as _it
+    all_pairs = list(_it.combinations(keys, 2))
+    n_pairs = len(all_pairs)
+    per_day = min(40, n_pairs)
+    start = (int(day_seed) * per_day) % max(1, n_pairs)
+    selected_pairs = [all_pairs[(start + i) % n_pairs] for i in range(per_day)]
+    for (a, b) in selected_pairs:
+        mask_a = predicates[a]
+        mask_b = predicates[b]
+        # NaN-safe boolean AND
+        valid = ~np.isnan(rsi_v) & ~np.isnan(z_v)
+        mask = mask_a & mask_b & valid
+        idx = np.where(mask)[0]
+        for side in ("LONG", "SHORT"):
+            wins, n, rets = _classify_outcomes(df, idx, side)
+            if n < 30:
+                continue
+            wlb, wub = _wilson(wins, n)
+            mean_ret = float(np.mean(rets)) if rets else 0.0
+            pnl = sum(rets) / 10_000 * 100
+            out.append(PatternHit(
+                name=f"composite_{a}+{b}_{side}",
+                family="composite_predicates", side=side,
+                n=n, wins=wins, win_rate=wins / n,
+                wilson_lower=wlb, wilson_upper=wub,
+                mean_return_bps=mean_ret, net_pnl=pnl,
+                params={"pred_a": a, "pred_b": b, "side": side, "day_seed": int(day_seed)},
+            ))
+    return out
+
+
 MINERS = {
     # original 4
     "run_length": mine_run_length,
@@ -1276,16 +1351,27 @@ MINERS = {
     "gap_behavior": mine_gap_behavior,
     "price_acceleration": mine_price_acceleration,
     "volume_price_divergence": mine_volume_price_divergence,
+    # +1 auto-rotating composite miner (different combos each day)
+    "composite_predicates": mine_composite_predicates,
 }
 
 
 def _mine_one_timeframe(df: pd.DataFrame, tf: str, all_hits: list[PatternHit],
+                        day_seed: int = 0,
                         ) -> None:
     """Run every miner on this dataframe. Each hit name is suffixed with @tf
-    so 5m vs 1h variants of the same pattern are tracked separately."""
+    so 5m vs 1h variants of the same pattern are tracked separately.
+
+    day_seed lets the composite_predicates miner rotate which predicate pairs
+    it tests so genuinely new pattern names appear daily."""
+    import inspect as _insp
     for fname, fn in MINERS.items():
         try:
-            hits = fn(df)
+            sig = _insp.signature(fn)
+            if "day_seed" in sig.parameters:
+                hits = fn(df, day_seed=day_seed)
+            else:
+                hits = fn(df)
         except Exception as exc:
             log.warning("miner %s errored on %s: %s", fname, tf, exc)
             continue
@@ -1316,6 +1402,11 @@ def run(symbol: str | None = None, timeframe: str | None = None,
     all_holdout_by_name: dict[str, PatternHit] = {}
     bar_counts: dict[str, int] = {}
 
+    # day_seed: persisted counter, increments each new mining day. Drives the
+    # composite_predicates miner to rotate through new predicate-pair combos
+    # each day so genuinely new patterns appear in the DB over time.
+    day_seed = int(state.get("day_seed", 0))
+
     for tf in timeframes:
         tf_ms = config.timeframe_ms(tf)
         # scale needed bars by timeframe so we always get ~120 days
@@ -1332,9 +1423,9 @@ def run(symbol: str | None = None, timeframe: str | None = None,
         df_holdout = df.iloc[:n_holdout_tf].reset_index(drop=True)
         df_primary = df.iloc[n_holdout_tf:].reset_index(drop=True)
         log.info("  %s primary=%d holdout=%d", tf, len(df_primary), len(df_holdout))
-        _mine_one_timeframe(df_primary, tf, all_primary)
+        _mine_one_timeframe(df_primary, tf, all_primary, day_seed=day_seed)
         holdout_hits: list[PatternHit] = []
-        _mine_one_timeframe(df_holdout, tf, holdout_hits)
+        _mine_one_timeframe(df_holdout, tf, holdout_hits, day_seed=day_seed)
         for h in holdout_hits:
             all_holdout_by_name[h.name] = h
 
@@ -1342,16 +1433,22 @@ def run(symbol: str | None = None, timeframe: str | None = None,
         log.warning("patterns: no patterns generated across any timeframe")
         return {"error": "no_data", "bar_counts": bar_counts}
 
+    # Count new pattern names that didn't exist in the persisted DB before this run
+    pre_existing = set(state.get("patterns", {}).keys())
     promoted_now: list[str] = []
     for hit in all_primary:
         holdout = all_holdout_by_name.get(hit.name)
         holds_out = holdout is not None and _passes_bar(holdout)
         if _maybe_promote(state, hit, holds_out, now_ts):
             promoted_now.append(hit.name)
+    new_names = [h.name for h in all_primary if h.name not in pre_existing]
 
     state["last_run_day"] = today
     state["last_run_ts"] = now_ts
     state["bar_counts"] = bar_counts
+    state["day_seed"] = day_seed + 1  # rotate predicate combos tomorrow
+    state["new_pattern_count_today"] = len(new_names)
+    state["cumulative_new_patterns"] = state.get("cumulative_new_patterns", 0) + len(new_names)
     _save_state(state)
     n_activated = _activate_promoted(state)
 
@@ -1360,6 +1457,9 @@ def run(symbol: str | None = None, timeframe: str | None = None,
     summary = {
         "day": today,
         "patterns_tested": len(all_primary),
+        "new_pattern_names_added": len(new_names),
+        "cumulative_new_patterns": state["cumulative_new_patterns"],
+        "day_seed": day_seed,
         "passed_bar_primary": passed,
         "trial_tier": trial,
         "promoted_this_run": promoted_now,

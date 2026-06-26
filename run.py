@@ -15,6 +15,7 @@ from btcbot import (
     data as data_mod,
     discover,
     edge_report,
+    health,
     indicators,
     patterns,
     predictions,
@@ -280,6 +281,19 @@ def cmd_variants(args) -> int:
     return 0
 
 
+def cmd_health_check(args) -> int:
+    rep = health.check()
+    path = health.write_report()
+    print(json.dumps(rep, indent=2))
+    if rep["failures"]:
+        print(f"\nHEALTH FAILED ({len(rep['failures'])} failures, score {rep['score']}/10)",
+              file=sys.stderr)
+        for f in rep["failures"]:
+            print(f"  FAIL: {f}", file=sys.stderr)
+        return 1
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     p = argparse.ArgumentParser(prog="btcbot")
@@ -333,6 +347,7 @@ def main(argv: list[str] | None = None) -> int:
     sp.add_argument("--since", default="30d")
     sp.add_argument("--json", action="store_true")
     sub.add_parser("daily-report")
+    sub.add_parser("health-check")
 
     args = p.parse_args(argv)
     handlers = {
@@ -345,6 +360,7 @@ def main(argv: list[str] | None = None) -> int:
         "discover": cmd_discover, "variants": cmd_variants,
         "mine-patterns": cmd_mine_patterns, "patterns": cmd_patterns,
         "edge-report": cmd_edge_report, "daily-report": cmd_daily_report,
+        "health-check": cmd_health_check,
     }
     try:
         return handlers[args.cmd](args)

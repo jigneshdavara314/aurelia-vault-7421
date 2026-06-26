@@ -11,12 +11,16 @@ from . import config, store
 from .backtest import wilson_interval
 
 TIER_MULT = {"trial": 0.25, "exploratory": 0.5, "confirmed": 1.0, "disabled": 0.0}
-PROMOTE_WLB_BAR = 0.50  # Wilson lower bound on win rate; tightened later by regime
+PROMOTE_WLB_BAR = 0.50  # Wilson lower bound on win rate
 DEMOTE_WLB_BAR = 0.45
-TRIAL_TO_EXPLORATORY_DAYS = 5
-EXPLORATORY_TO_CONFIRMED_DAYS = 10
-DEMOTE_ROLLING_N = 30
-DISABLE_N_BAR = 30
+TRIAL_TO_EXPLORATORY_DAYS = 2  # was 5; at ~3 trades/day we need faster cycles
+EXPLORATORY_TO_CONFIRMED_DAYS = 4  # was 10
+# Reduced n thresholds: at ~1 trade/cell/day, n>=20 took ~100 days; n>=8 takes 8d
+PROMOTE_N_MIN = 8   # was 20; trial -> exploratory requires this n in evaluation window
+DEMOTE_ROLLING_N = 12  # was 30; demote on rolling-12 evidence
+DISABLE_N_BAR = 12  # was 30
+# Cell granularity: stop fanning out across regime (collapses 8 cells -> 3-6)
+USE_REGIME_IN_CELL_KEY = False
 
 
 @dataclass
@@ -37,7 +41,10 @@ class CellState:
 
 
 def _key(c: CellState) -> str:
-    return f"{c.strategy}|{c.regime}|{c.side}"
+    if USE_REGIME_IN_CELL_KEY:
+        return f"{c.strategy}|{c.regime}|{c.side}"
+    # Collapsed: strategy|side only. Concentrates samples so n grows ~3x faster.
+    return f"{c.strategy}|*|{c.side}"
 
 
 def _path() -> Path:
@@ -94,15 +101,27 @@ def _append_log(row: dict[str, Any]) -> None:
 
 def _recent_trades(strategy: str, regime: str, side: str, n: int) -> list[dict]:
     with store.conn_ctx() as c:
-        rows = c.execute(
-            """
-            SELECT * FROM trades
-            WHERE strategy = ? AND regime = ? AND side = ?
-              AND status IN ('WON','LOST','TIMEOUT')
-            ORDER BY exit_ts DESC LIMIT ?
-            """,
-            (strategy, regime, side, int(n)),
-        ).fetchall()
+        if USE_REGIME_IN_CELL_KEY:
+            rows = c.execute(
+                """
+                SELECT * FROM trades
+                WHERE strategy = ? AND regime = ? AND side = ?
+                  AND status IN ('WON','LOST','TIMEOUT')
+                ORDER BY exit_ts DESC LIMIT ?
+                """,
+                (strategy, regime, side, int(n)),
+            ).fetchall()
+        else:
+            # Regime-agnostic aggregation: collapse across regimes for faster n growth.
+            rows = c.execute(
+                """
+                SELECT * FROM trades
+                WHERE strategy = ? AND side = ?
+                  AND status IN ('WON','LOST','TIMEOUT')
+                ORDER BY exit_ts DESC LIMIT ?
+                """,
+                (strategy, side, int(n)),
+            ).fetchall()
     return [dict(r) for r in rows]
 
 
@@ -151,21 +170,29 @@ def run(now_ts: int) -> dict[str, Any]:
     seen_cells: set[str] = set()
 
     with store.conn_ctx() as c:
-        rows = c.execute(
-            """
-            SELECT DISTINCT strategy, regime, side FROM trades
-            WHERE status IN ('WON','LOST','TIMEOUT')
-            """
-        ).fetchall()
+        if USE_REGIME_IN_CELL_KEY:
+            rows = c.execute(
+                """
+                SELECT DISTINCT strategy, regime, side FROM trades
+                WHERE status IN ('WON','LOST','TIMEOUT')
+                """
+            ).fetchall()
+        else:
+            rows = c.execute(
+                """
+                SELECT DISTINCT strategy, '*' AS regime, side FROM trades
+                WHERE status IN ('WON','LOST','TIMEOUT')
+                """
+            ).fetchall()
 
     for r in rows:
         strategy = r["strategy"]
-        regime = r["regime"] or "mixed"
+        regime = r["regime"] or "*"
         side = r["side"]
         key = f"{strategy}|{regime}|{side}"
         seen_cells.add(key)
         cs = state.get(key) or CellState(strategy=strategy, regime=regime, side=side)
-        recent = _recent_trades(strategy, regime, side, DEMOTE_ROLLING_N)
+        recent = _recent_trades(strategy, regime, side, max(DEMOTE_ROLLING_N, 30))
         n = len(recent)
         wins = _wins(recent)
         wlb, wub = wilson_interval(wins, n)
@@ -181,7 +208,7 @@ def run(now_ts: int) -> dict[str, Any]:
             state[key] = cs
             continue
 
-        if wlb > PROMOTE_WLB_BAR and n >= 20:
+        if wlb > PROMOTE_WLB_BAR and n >= PROMOTE_N_MIN:
             cs.consecutive_promote_days += 1
         else:
             cs.consecutive_promote_days = 0

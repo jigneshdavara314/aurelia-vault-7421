@@ -168,8 +168,15 @@ def simulate(
     spec.setdefault("ema_200", {"fn": "ema", "args": {"n": 200}})
     spec.setdefault("atr_14", {"fn": "atr", "args": {"n": 14}})
     work = indicators.add_indicators(df, spec)
-    if "donch_high_20" in (getattr(strategy, "required_indicators", {}) or {}) or \
-            getattr(strategy, "name", "") == "breakout_donchian":
+    # Donchian injection: match on class FAMILY attr (works for variants whose
+    # .name was overridden by discover.py). Falls back to substring match on
+    # name for safety.
+    strat_family = getattr(strategy, "FAMILY", "") or getattr(strategy.__class__, "FAMILY", "")
+    strat_name = getattr(strategy, "name", "") or ""
+    if ("donch_high_20" in (getattr(strategy, "required_indicators", {}) or {})
+            or strat_family == "breakout_donchian"
+            or "breakout_donchian" in strat_name
+            or strat_name.startswith("breakout_donchian::")):
         work["donch_high_20"] = work["high"].rolling(20, min_periods=20).max().shift(1)
         work["donch_low_20"] = work["low"].rolling(20, min_periods=20).min().shift(1)
     work = indicators.classify_regime(work)

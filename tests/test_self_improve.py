@@ -37,7 +37,8 @@ def test_self_improve_promotes_high_winrate_cell():
     out = self_improve.run(now)
     assert out["evaluated"] >= 1
     state = self_improve.all_states()
-    key = "nsigma_fade|ranging|LONG"
+    # Cells are collapsed across regime now; key is strategy|*|side
+    key = "nsigma_fade|*|LONG"
     assert key in state
     assert state[key].rolling_wilson_lower > 0.5
 
@@ -47,7 +48,8 @@ def test_self_improve_demotes_terrible_cell():
     now = config.time_now_ms()
     self_improve.run(now)
     state = self_improve.all_states()
-    key = "nsigma_fade|ranging|LONG"
+    # Cells are collapsed across regime now; key is strategy|*|side
+    key = "nsigma_fade|*|LONG"
     assert state[key].tier in {"trial", "disabled"}
 
 

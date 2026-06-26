@@ -8,6 +8,7 @@ from .base import Strategy
 
 class NSigmaFade(Strategy):
     name = "nsigma_fade"
+    FAMILY = "nsigma_fade"
     required_indicators = {
         "z_20": {"fn": "zscore", "args": {"n": 20}},
         "atr_14": {"fn": "atr", "args": {"n": 14}},

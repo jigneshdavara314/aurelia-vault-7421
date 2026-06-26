@@ -71,6 +71,9 @@ jobs:
       - name: Write daily edge report
         run: python run.py daily-report || true
 
+      - name: Health check (writes health.json; non-fatal)
+        run: python run.py health-check || true
+
       - name: Render static dashboard
         run: python dashboard.py --write
 
@@ -90,6 +93,7 @@ jobs:
           if [ -f patterns.json ]; then git add -f patterns.json; fi
           if [ -f pattern_log.jsonl ]; then git add -f pattern_log.jsonl; fi
           if [ -d reports ]; then git add -f reports/; fi
+          if [ -f health.json ]; then git add -f health.json; fi
           git add -f settings.json
           if git diff --cached --quiet; then
             echo "no changes to commit"

@@ -26,10 +26,14 @@ DISCOVERY_LOG_PATH = config.ROOT / "discovery_log.jsonl"
 #   - wilson_lower > break_even_win_rate + EDGE_BUFFER (NET of fees + slippage)
 #   - SAME variant passes 2 consecutive daily discovery runs
 MIN_N = 30
-EDGE_BUFFER = 0.02  # require WLB at least 2pp above the break-even WR
+EDGE_BUFFER = 0.005  # was 0.02 — relaxed to 0.5pp (still positive expectancy)
 CONSECUTIVE_RUNS_TO_PROMOTE = 2
 LOOKBACK_BARS = 8640  # ~30 days of 5m candles
-MAX_VARIANTS_PER_STRATEGY = 20
+# Cap on variants tested per parent per day (CPU budget). The FULL grid is
+# larger; we rotate which slice gets tested each day so coverage grows.
+VARIANTS_PER_RUN_PER_STRATEGY = 40
+# Retire variants that have been tested for this many runs with zero passes:
+RETIRE_AFTER_NO_PASS_RUNS = 7
 
 
 @dataclass
@@ -59,47 +63,77 @@ class DiscoveryResult:
 
 
 # === Variant generation ====================================================
-def _variants_for(name: str) -> list[Variant]:
-    """Generate parameter variations for a parent strategy."""
+def _full_grid(name: str) -> list[Variant]:
+    """Full parameter grid (no slicing). Daily run samples a rotating window."""
     if name == "nsigma_fade":
         out = []
         for z, tp, sl, hor in itertools.product(
-            (-1.2, -1.5, -1.8, -2.0, -2.5),
-            (1.0, 1.2, 1.5, 2.0),
-            (0.5, 0.7, 1.0),
-            (6, 12, 24),
+            (-0.8, -1.0, -1.2, -1.5, -1.8, -2.0, -2.5, -3.0),
+            (1.0, 1.2, 1.5, 1.8, 2.0, 2.5, 3.0),
+            (0.5, 0.7, 1.0, 1.3, 1.5, 2.0),
+            (6, 12, 24, 36, 48),
         ):
             out.append(Variant(
                 parent=name, name=f"z{z}_tp{tp}_sl{sl}_h{hor}",
                 params={"Z_THRESH": z, "TP_ATR": tp, "SL_ATR": sl, "HORIZON_BARS": hor},
             ))
-        return out[:MAX_VARIANTS_PER_STRATEGY]
+        return out
     if name == "breakout_donchian":
         out = []
-        for tp, sl, hor in itertools.product(
-            (1.5, 2.0, 2.5, 3.0),
-            (0.8, 1.0, 1.5),
-            (12, 24, 36),
+        for tp, sl, hor, buf in itertools.product(
+            (1.2, 1.5, 1.8, 2.0, 2.5, 3.0, 4.0),
+            (0.6, 0.8, 1.0, 1.3, 1.5, 2.0),
+            (12, 24, 36, 48),
+            (0.001, 0.003, 0.005),
         ):
             out.append(Variant(
-                parent=name, name=f"tp{tp}_sl{sl}_h{hor}",
-                params={"TP_ATR": tp, "SL_ATR": sl, "HORIZON_BARS": hor},
+                parent=name, name=f"tp{tp}_sl{sl}_h{hor}_buf{buf}",
+                params={"TP_ATR": tp, "SL_ATR": sl, "HORIZON_BARS": hor,
+                        "BREAKOUT_BUFFER": buf},
             ))
-        return out[:MAX_VARIANTS_PER_STRATEGY]
+        return out
     if name == "momentum_ema_cross":
         out = []
         for tp, sl, hor, pull in itertools.product(
-            (2.0, 3.0, 4.0),
-            (1.0, 1.5, 2.0),
-            (24, 36, 48),
-            (0.5, 1.0, 1.5),
+            (1.5, 2.0, 2.5, 3.0, 4.0, 5.0),
+            (0.8, 1.0, 1.2, 1.5, 2.0),
+            (24, 36, 48, 72),
+            (3.0, 5.0, 8.0, 12.0),
         ):
             out.append(Variant(
                 parent=name, name=f"tp{tp}_sl{sl}_h{hor}_pb{pull}",
-                params={"TP_ATR": tp, "SL_ATR": sl, "HORIZON_BARS": hor, "PULLBACK_ATR": pull},
+                params={"TP_ATR": tp, "SL_ATR": sl, "HORIZON_BARS": hor,
+                        "PULLBACK_ATR": pull},
             ))
-        return out[:MAX_VARIANTS_PER_STRATEGY]
+        return out
     return []
+
+
+def _variants_for(name: str, day_index: int = 0,
+                  retired: set | None = None) -> list[Variant]:
+    """Returns the slice of the full grid to test today. Rotates through the
+    grid over many days so eventually every parameter combo gets evaluated.
+    Retired variants are skipped entirely."""
+    full = _full_grid(name)
+    retired = retired or set()
+    # filter out retired
+    live = [v for v in full if v.id not in retired]
+    if not live:
+        return []
+    # rotating window
+    start = (day_index * VARIANTS_PER_RUN_PER_STRATEGY) % len(live)
+    out: list[Variant] = []
+    for i in range(VARIANTS_PER_RUN_PER_STRATEGY):
+        out.append(live[(start + i) % len(live)])
+    # de-dup if the rotation wraps around in a small grid
+    seen = set()
+    uniq = []
+    for v in out:
+        if v.id in seen:
+            continue
+        seen.add(v.id)
+        uniq.append(v)
+    return uniq
 
 
 def _instantiate(variant: Variant) -> Strategy:
@@ -240,9 +274,25 @@ def run(symbol: str = "BTC/USDT", timeframe: str = "5m",
     results: list[DiscoveryResult] = []
     promoted_now: list[str] = []
 
+    # Day-index: how many distinct days have we run? Used to rotate slices.
+    day_index = state.get("days_run_count", 0)
+    # Retire variants that have been tested >=N runs with zero pass-streak
+    retired = set(state.get("retired", []))
+    for vid, var in state["variants"].items():
+        hist = var.get("history", [])
+        if (len(hist) >= RETIRE_AFTER_NO_PASS_RUNS
+                and var.get("pass_streak", 0) == 0
+                and var.get("tier", "candidate") == "candidate"
+                and not all(h.get("passes") for h in hist[-RETIRE_AFTER_NO_PASS_RUNS:])):
+            retired.add(vid)
+
     parents = ["nsigma_fade", "breakout_donchian", "momentum_ema_cross"]
+    n_retired_this_run = len(retired) - len(state.get("retired", []))
+    n_new_this_run = 0
     for parent in parents:
-        for variant in _variants_for(parent):
+        for variant in _variants_for(parent, day_index=day_index, retired=retired):
+            if variant.id not in state.get("variants", {}):
+                n_new_this_run += 1
             try:
                 strat = _instantiate(variant)
                 res = backtest.simulate(
@@ -281,12 +331,18 @@ def run(symbol: str = "BTC/USDT", timeframe: str = "5m",
 
     state["last_run_day"] = today
     state["last_run_ts"] = now_ts
+    state["days_run_count"] = day_index + 1
+    state["retired"] = sorted(retired)
     _save_state(state)
     n_activated = _activate_promoted_variants(state)
 
     summary = {
         "day": today,
         "variants_tested": len(results),
+        "new_variants_added_this_run": n_new_this_run,
+        "retired_this_run": n_retired_this_run,
+        "total_retired": len(retired),
+        "day_index": day_index,
         "passed_bar": sum(1 for r in results if r.pass_bar),
         "promoted_this_run": promoted_now,
         "newly_active_in_settings": n_activated,

@@ -13,11 +13,15 @@ class MomentumEmaCross(Strategy):
         "ema_50": {"fn": "ema", "args": {"n": 50}},
         "ema_200": {"fn": "ema", "args": {"n": 200}},
     }
+    FAMILY = "momentum_ema_cross"
     BASE_PRED = 0.53
     HORIZON_BARS = 36
     SL_ATR = 1.5
     TP_ATR = 3.5
-    PULLBACK_ATR = 3.0
+    # PULLBACK_ATR=3 was too tight (in BTC uptrends close is typically 4-12 ATR
+    # above ema_50). Loosen to 8 so the strategy can fire on steady trends and
+    # not just rare pullbacks.
+    PULLBACK_ATR = 8.0
 
     def evaluate(self, snap, cfg, cost_bps):
         ind = snap.indicators
