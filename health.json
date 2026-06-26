@@ -1,15 +1,14 @@
 {
-  "ts": 1782480552357,
+  "ts": 1782488522178,
   "today_utc": "2026-06-26",
   "score": 9,
   "max_score": 10,
   "failures": [],
   "warnings": [
-    "strategy breakout_donchian: 0 emissions in last 7d (suspect dormant)",
     "ladder: 0 cells have n>=8 (still accumulating samples)"
   ],
   "metrics": {
-    "patterns_total": 2938,
+    "patterns_total": 3000,
     "patterns_last_run_day": "2026-06-26",
     "patterns_new_today": 2594,
     "patterns_cumulative_new": 2594,
@@ -17,19 +16,19 @@
     "patterns_by_tier": {
       "trial": 1,
       "active": 0,
-      "candidate": 2937
+      "candidate": 2999
     },
     "discoveries_total": 60,
     "discoveries_last_run_day": "2026-06-26",
     "discoveries_days_run_count": 0,
     "discoveries_retired": 0,
-    "signal_events_24h": 30,
-    "signals_emitted_24h": 12,
-    "trades_opened_24h": 6,
+    "signal_events_24h": 35,
+    "signals_emitted_24h": 15,
+    "trades_opened_24h": 8,
     "emissions_by_strategy_7d": {
-      "breakout_donchian": 0,
-      "momentum_ema_cross": 6,
-      "nsigma_fade": 6
+      "breakout_donchian": 1,
+      "momentum_ema_cross": 7,
+      "nsigma_fade": 7
     },
     "ladder_cells_total": 2,
     "ladder_cells_with_trades": 2,
