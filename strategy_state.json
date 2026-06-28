@@ -5,7 +5,7 @@
     "side": "LONG",
     "tier": "trial",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782661760495,
+    "last_evaluated_at": 1782666674862,
     "last_changed_at": 0,
     "consecutive_promote_days": 0,
     "rolling_win_rate": 0.36363636363636365,
@@ -18,16 +18,23 @@
     "strategy": "nsigma_fade",
     "regime": "*",
     "side": "LONG",
-    "tier": "trial",
+    "tier": "disabled",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782661760495,
-    "last_changed_at": 0,
+    "last_evaluated_at": 1782666674862,
+    "last_changed_at": 1782666674862,
     "consecutive_promote_days": 0,
-    "rolling_win_rate": 0.45454545454545453,
-    "rolling_n": 11,
-    "rolling_wilson_lower": 0.21270957543988045,
-    "rolling_wilson_upper": 0.7199122443100118,
-    "history": []
+    "rolling_win_rate": 0.4166666666666667,
+    "rolling_n": 12,
+    "rolling_wilson_lower": 0.19325746190524656,
+    "rolling_wilson_upper": 0.6804926643446272,
+    "history": [
+      {
+        "ts": 1782666674862,
+        "from": "trial",
+        "to": "disabled",
+        "reason": "wlb=0.193 < 0.45"
+      }
+    ]
   },
   "breakout_donchian|*|LONG": {
     "strategy": "breakout_donchian",
@@ -35,7 +42,7 @@
     "side": "LONG",
     "tier": "trial",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782661760495,
+    "last_evaluated_at": 1782666674862,
     "last_changed_at": 0,
     "consecutive_promote_days": 0,
     "rolling_win_rate": 0.125,
@@ -50,7 +57,7 @@
     "side": "SHORT",
     "tier": "trial",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782661760495,
+    "last_evaluated_at": 1782666674862,
     "last_changed_at": 0,
     "consecutive_promote_days": 0,
     "rolling_win_rate": 0.16666666666666666,
