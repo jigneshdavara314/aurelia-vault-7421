@@ -1,22 +1,22 @@
 {
-  "as_of": "2026-06-28T08:21:31.440731+00:00",
+  "as_of": "2026-06-28T10:39:57.420082+00:00",
   "since_days": 5,
   "total": {
     "key": "ALL",
-    "n": 32,
+    "n": 33,
     "wins": 6,
-    "losses": 25,
+    "losses": 26,
     "timeouts": 1,
     "open": 1,
-    "net_pnl": -1.61,
-    "gross_pnl": -0.17,
-    "fee_paid": 1.44,
-    "deployed": 495.0,
-    "win_rate": 0.1875,
-    "wilson_lower": 0.0889,
-    "wilson_upper": 0.3531,
+    "net_pnl": -1.67,
+    "gross_pnl": -0.19,
+    "fee_paid": 1.48,
+    "deployed": 510.0,
+    "win_rate": 0.1818,
+    "wilson_lower": 0.0861,
+    "wilson_upper": 0.3439,
     "avg_pnl": -0.05,
-    "roi_pct": -0.0032
+    "roi_pct": -0.0033
   },
   "by_strategy": [
     {
@@ -37,23 +37,6 @@
       "roi_pct": -0.0048
     },
     {
-      "key": "nsigma_fade",
-      "n": 14,
-      "wins": 3,
-      "losses": 10,
-      "timeouts": 1,
-      "open": 1,
-      "net_pnl": -0.53,
-      "gross_pnl": 0.1,
-      "fee_paid": 0.63,
-      "deployed": 225.0,
-      "win_rate": 0.2143,
-      "wilson_lower": 0.0757,
-      "wilson_upper": 0.4759,
-      "avg_pnl": -0.04,
-      "roi_pct": -0.0023
-    },
-    {
       "key": "momentum_ema_cross",
       "n": 11,
       "wins": 3,
@@ -69,6 +52,23 @@
       "wilson_upper": 0.5657,
       "avg_pnl": -0.05,
       "roi_pct": -0.0035
+    },
+    {
+      "key": "nsigma_fade",
+      "n": 15,
+      "wins": 3,
+      "losses": 11,
+      "timeouts": 1,
+      "open": 1,
+      "net_pnl": -0.59,
+      "gross_pnl": 0.08,
+      "fee_paid": 0.68,
+      "deployed": 240.0,
+      "win_rate": 0.2,
+      "wilson_lower": 0.0705,
+      "wilson_upper": 0.4519,
+      "avg_pnl": -0.04,
+      "roi_pct": -0.0025
     }
   ],
   "by_pattern": [],
@@ -144,18 +144,18 @@
     },
     {
       "key": "ranging",
-      "n": 23,
+      "n": 24,
       "wins": 4,
-      "losses": 19,
+      "losses": 20,
       "timeouts": 0,
       "open": 1,
-      "net_pnl": -1.24,
-      "gross_pnl": -0.21,
-      "fee_paid": 1.04,
-      "deployed": 360.0,
-      "win_rate": 0.1739,
-      "wilson_lower": 0.0698,
-      "wilson_upper": 0.3714,
+      "net_pnl": -1.31,
+      "gross_pnl": -0.23,
+      "fee_paid": 1.08,
+      "deployed": 375.0,
+      "win_rate": 0.1667,
+      "wilson_lower": 0.0668,
+      "wilson_upper": 0.3585,
       "avg_pnl": -0.05,
       "roi_pct": -0.0035
     }
@@ -163,20 +163,20 @@
   "by_side": [
     {
       "key": "SHORT",
-      "n": 4,
+      "n": 5,
       "wins": 0,
-      "losses": 3,
+      "losses": 4,
       "timeouts": 1,
-      "open": 1,
-      "net_pnl": -0.15,
-      "gross_pnl": 0.03,
-      "fee_paid": 0.18,
+      "open": 0,
+      "net_pnl": -0.22,
+      "gross_pnl": 0.01,
+      "fee_paid": 0.22,
       "deployed": 75.0,
       "win_rate": 0.0,
       "wilson_lower": 0.0,
-      "wilson_upper": 0.4899,
+      "wilson_upper": 0.4345,
       "avg_pnl": -0.04,
-      "roi_pct": -0.002
+      "roi_pct": -0.0029
     },
     {
       "key": "LONG",
@@ -184,35 +184,35 @@
       "wins": 6,
       "losses": 22,
       "timeouts": 0,
-      "open": 0,
+      "open": 1,
       "net_pnl": -1.46,
       "gross_pnl": -0.2,
       "fee_paid": 1.26,
-      "deployed": 420.0,
+      "deployed": 435.0,
       "win_rate": 0.2143,
       "wilson_lower": 0.1021,
       "wilson_upper": 0.3954,
       "avg_pnl": -0.05,
-      "roi_pct": -0.0035
+      "roi_pct": -0.0033
     }
   ],
   "by_day": [
     {
       "key": "2026-06-28",
-      "n": 2,
+      "n": 3,
       "wins": 0,
-      "losses": 2,
+      "losses": 3,
       "timeouts": 0,
       "open": 1,
-      "net_pnl": -0.13,
-      "gross_pnl": -0.04,
-      "fee_paid": 0.09,
-      "deployed": 45.0,
+      "net_pnl": -0.19,
+      "gross_pnl": -0.06,
+      "fee_paid": 0.14,
+      "deployed": 60.0,
       "win_rate": 0.0,
       "wilson_lower": 0.0,
-      "wilson_upper": 0.6576,
+      "wilson_upper": 0.5615,
       "avg_pnl": -0.06,
-      "roi_pct": -0.0028
+      "roi_pct": -0.0032
     },
     {
       "key": "2026-06-26",
@@ -252,6 +252,23 @@
   "winners": [],
   "losers": [
     {
+      "key": "nsigma_fade",
+      "n": 15,
+      "wins": 3,
+      "losses": 11,
+      "timeouts": 1,
+      "open": 1,
+      "net_pnl": -0.59,
+      "gross_pnl": 0.08,
+      "fee_paid": 0.68,
+      "deployed": 240.0,
+      "win_rate": 0.2,
+      "wilson_lower": 0.0705,
+      "wilson_upper": 0.4519,
+      "avg_pnl": -0.04,
+      "roi_pct": -0.0025
+    },
+    {
       "key": "momentum_ema_cross",
       "n": 11,
       "wins": 3,
@@ -267,23 +284,6 @@
       "wilson_upper": 0.5657,
       "avg_pnl": -0.05,
       "roi_pct": -0.0035
-    },
-    {
-      "key": "nsigma_fade",
-      "n": 14,
-      "wins": 3,
-      "losses": 10,
-      "timeouts": 1,
-      "open": 1,
-      "net_pnl": -0.53,
-      "gross_pnl": 0.1,
-      "fee_paid": 0.63,
-      "deployed": 225.0,
-      "win_rate": 0.2143,
-      "wilson_lower": 0.0757,
-      "wilson_upper": 0.4759,
-      "avg_pnl": -0.04,
-      "roi_pct": -0.0023
     },
     {
       "key": "breakout_donchian",
