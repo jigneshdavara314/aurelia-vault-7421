@@ -3,16 +3,23 @@
     "strategy": "momentum_ema_cross",
     "regime": "*",
     "side": "LONG",
-    "tier": "trial",
+    "tier": "disabled",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782734539831,
-    "last_changed_at": 0,
+    "last_evaluated_at": 1782749512526,
+    "last_changed_at": 1782749512526,
     "consecutive_promote_days": 0,
-    "rolling_win_rate": 0.36363636363636365,
-    "rolling_n": 11,
-    "rolling_wilson_lower": 0.15166223614131383,
-    "rolling_wilson_upper": 0.6462032231083628,
-    "history": []
+    "rolling_win_rate": 0.3333333333333333,
+    "rolling_n": 12,
+    "rolling_wilson_lower": 0.13811783989736134,
+    "rolling_wilson_upper": 0.609382412602386,
+    "history": [
+      {
+        "ts": 1782749512526,
+        "from": "trial",
+        "to": "disabled",
+        "reason": "wlb=0.138 < 0.45"
+      }
+    ]
   },
   "nsigma_fade|*|LONG": {
     "strategy": "nsigma_fade",
@@ -20,7 +27,7 @@
     "side": "LONG",
     "tier": "disabled",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782734539831,
+    "last_evaluated_at": 1782749512526,
     "last_changed_at": 1782666674862,
     "consecutive_promote_days": 0,
     "rolling_win_rate": 0.46153846153846156,
@@ -42,7 +49,7 @@
     "side": "LONG",
     "tier": "trial",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782734539831,
+    "last_evaluated_at": 1782749512526,
     "last_changed_at": 0,
     "consecutive_promote_days": 0,
     "rolling_win_rate": 0.1,
@@ -57,7 +64,7 @@
     "side": "SHORT",
     "tier": "trial",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782734539831,
+    "last_evaluated_at": 1782749512526,
     "last_changed_at": 0,
     "consecutive_promote_days": 0,
     "rolling_win_rate": 0.25,
