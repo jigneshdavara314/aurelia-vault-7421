@@ -1,25 +1,25 @@
 # Edge report (last 8 days)
 
-As of: 2026-07-01T06:11:02.686979+00:00
+As of: 2026-07-01T10:14:51.914515+00:00
 
 ## Total
-- Trades resolved: **60** (open: 2)
-- Win rate: **15.0%** (95% CI: 8.1% to 26.1%)
-- Net P&L: **$-3.11**
-- Capital deployed: $930.00  -> ROI: **-0.33%**
-- Fees+slippage paid: $2.70
+- Trades resolved: **62** (open: 1)
+- Win rate: **14.5%** (95% CI: 7.8% to 25.3%)
+- Net P&L: **$-3.27**
+- Capital deployed: $945.00  -> ROI: **-0.35%**
+- Fees+slippage paid: $2.79
 
 ## Losers (negative net P&L, ≥5 trades)
-- **nsigma_fade** — 31 trades, WR 16.1%, net $-1.32
+- **nsigma_fade** — 32 trades, WR 15.6%, net $-1.40
 - **breakout_donchian** — 15 trades, WR 6.7%, net $-0.98
-- **momentum_ema_cross** — 14 trades, WR 21.4%, net $-0.81
+- **momentum_ema_cross** — 15 trades, WR 20.0%, net $-0.89
 
 ## By strategy
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
-| momentum_ema_cross | 14 | 21.4% | 7.6% | $-0.81 | -0.36% | $225.00 |
-| breakout_donchian | 15 | 6.7% | 1.2% | $-0.98 | -0.44% | $225.00 |
-| nsigma_fade | 31 | 16.1% | 7.1% | $-1.32 | -0.27% | $480.00 |
+| momentum_ema_cross | 15 | 20.0% | 7.0% | $-0.89 | -0.40% | $225.00 |
+| breakout_donchian | 15 | 6.7% | 1.2% | $-0.98 | -0.41% | $240.00 |
+| nsigma_fade | 32 | 15.6% | 6.9% | $-1.40 | -0.29% | $480.00 |
 
 ## By regime
 | key | n | WR | WLB | net P&L | ROI | deployed |
@@ -28,18 +28,18 @@ As of: 2026-07-01T06:11:02.686979+00:00
 | trending_up | 2 | 0.0% | 0.0% | $-0.21 | -0.71% | $30.00 |
 | high_vol | 6 | 0.0% | 0.0% | $-0.31 | -0.35% | $90.00 |
 | mixed | 13 | 38.5% | 17.7% | $-0.37 | -0.19% | $195.00 |
-| ranging | 37 | 10.8% | 4.3% | $-2.08 | -0.36% | $585.00 |
+| ranging | 39 | 10.3% | 4.1% | $-2.24 | -0.37% | $600.00 |
 
 ## By side
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
 | SHORT | 11 | 9.1% | 1.6% | $-0.45 | -0.27% | $165.00 |
-| LONG | 49 | 16.3% | 8.5% | $-2.66 | -0.35% | $765.00 |
+| LONG | 51 | 15.7% | 8.2% | $-2.82 | -0.36% | $780.00 |
 
 ## By day
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
-| 2026-07-01 | 2 | 50.0% | 9.4% | $-0.04 | -0.07% | $60.00 |
+| 2026-07-01 | 4 | 25.0% | 4.6% | $-0.20 | -0.27% | $75.00 |
 | 2026-06-29 | 9 | 22.2% | 6.3% | $-0.43 | -0.32% | $135.00 |
 | 2026-06-26 | 12 | 33.3% | 13.8% | $-0.53 | -0.30% | $180.00 |
 | 2026-06-28 | 10 | 0.0% | 0.0% | $-0.57 | -0.38% | $150.00 |
