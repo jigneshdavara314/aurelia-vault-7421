@@ -5,7 +5,7 @@
     "side": "LONG",
     "tier": "disabled",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782911568294,
+    "last_evaluated_at": 1782921009395,
     "last_changed_at": 1782749512526,
     "consecutive_promote_days": 0,
     "rolling_win_rate": 0.26666666666666666,
@@ -27,7 +27,7 @@
     "side": "LONG",
     "tier": "disabled",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782911568294,
+    "last_evaluated_at": 1782921009395,
     "last_changed_at": 1782666674862,
     "consecutive_promote_days": 0,
     "rolling_win_rate": 0.3333333333333333,
@@ -49,13 +49,13 @@
     "side": "LONG",
     "tier": "disabled",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782911568294,
+    "last_evaluated_at": 1782921009395,
     "last_changed_at": 1782773864579,
     "consecutive_promote_days": 0,
-    "rolling_win_rate": 0.125,
-    "rolling_n": 16,
-    "rolling_wilson_lower": 0.034976749337057134,
-    "rolling_wilson_upper": 0.3602333143674828,
+    "rolling_win_rate": 0.17647058823529413,
+    "rolling_n": 17,
+    "rolling_wilson_lower": 0.0619101371254899,
+    "rolling_wilson_upper": 0.41029929017375777,
     "history": [
       {
         "ts": 1782773864579,
@@ -69,15 +69,22 @@
     "strategy": "nsigma_fade",
     "regime": "*",
     "side": "SHORT",
-    "tier": "trial",
+    "tier": "disabled",
     "days_in_tier": 0,
-    "last_evaluated_at": 1782911568294,
-    "last_changed_at": 0,
+    "last_evaluated_at": 1782921009395,
+    "last_changed_at": 1782921009395,
     "consecutive_promote_days": 0,
-    "rolling_win_rate": 0.36363636363636365,
-    "rolling_n": 11,
-    "rolling_wilson_lower": 0.15166223614131383,
-    "rolling_wilson_upper": 0.6462032231083628,
-    "history": []
+    "rolling_win_rate": 0.3333333333333333,
+    "rolling_n": 12,
+    "rolling_wilson_lower": 0.13811783989736134,
+    "rolling_wilson_upper": 0.609382412602386,
+    "history": [
+      {
+        "ts": 1782921009395,
+        "from": "trial",
+        "to": "disabled",
+        "reason": "wlb=0.138 < 0.45"
+      }
+    ]
   }
 }
