@@ -1,25 +1,25 @@
 # Edge report (last 45 days)
 
-As of: 2026-08-07T21:10:33.869053+00:00
+As of: 2026-08-07T21:55:35.886563+00:00
 
 ## Total
-- Trades resolved: **640** (open: 3)
+- Trades resolved: **643** (open: 0)
 - Win rate: **6.1%** (95% CI: 4.5% to 8.2%)
-- Net P&L: **$-33.78**
+- Net P&L: **$-33.91**
 - Capital deployed: $9,645.00  -> ROI: **-0.35%**
-- Fees+slippage paid: $28.80
+- Fees+slippage paid: $28.94
 
 ## Losers (negative net P&L, ≥5 trades)
-- **nsigma_fade** — 289 trades, WR 6.9%, net $-14.40
-- **breakout_donchian** — 232 trades, WR 3.5%, net $-12.90
+- **nsigma_fade** — 290 trades, WR 6.9%, net $-14.46
+- **breakout_donchian** — 234 trades, WR 3.4%, net $-12.96
 - **momentum_ema_cross** — 119 trades, WR 9.2%, net $-6.49
 
 ## By strategy
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
 | momentum_ema_cross | 119 | 9.2% | 5.2% | $-6.49 | -0.36% | $1,785.00 |
-| breakout_donchian | 232 | 3.5% | 1.8% | $-12.90 | -0.37% | $3,510.00 |
-| nsigma_fade | 289 | 6.9% | 4.5% | $-14.40 | -0.33% | $4,350.00 |
+| breakout_donchian | 234 | 3.4% | 1.7% | $-12.96 | -0.37% | $3,510.00 |
+| nsigma_fade | 290 | 6.9% | 4.5% | $-14.46 | -0.33% | $4,350.00 |
 
 ## By regime
 | key | n | WR | WLB | net P&L | ROI | deployed |
@@ -28,13 +28,13 @@ As of: 2026-08-07T21:10:33.869053+00:00
 | trending_up | 62 | 8.1% | 3.5% | $-3.32 | -0.36% | $930.00 |
 | high_vol | 81 | 12.3% | 6.9% | $-4.79 | -0.39% | $1,215.00 |
 | mixed | 125 | 14.4% | 9.3% | $-6.01 | -0.32% | $1,875.00 |
-| ranging | 348 | 1.4% | 0.6% | $-18.45 | -0.35% | $5,265.00 |
+| ranging | 351 | 1.4% | 0.6% | $-18.58 | -0.35% | $5,265.00 |
 
 ## By side
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
-| SHORT | 156 | 7.7% | 4.5% | $-7.64 | -0.32% | $2,355.00 |
-| LONG | 484 | 5.6% | 3.9% | $-26.14 | -0.36% | $7,290.00 |
+| SHORT | 157 | 7.6% | 4.4% | $-7.71 | -0.33% | $2,355.00 |
+| LONG | 486 | 5.6% | 3.9% | $-26.20 | -0.36% | $7,290.00 |
 
 ## By day
 | key | n | WR | WLB | net P&L | ROI | deployed |
