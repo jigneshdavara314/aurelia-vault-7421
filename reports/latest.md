@@ -1,16 +1,16 @@
 # Edge report (last 50 days)
 
-As of: 2026-08-12T23:10:22.154393+00:00
+As of: 2026-08-12T23:58:03.117721+00:00
 
 ## Total
-- Trades resolved: **784** (open: 1)
+- Trades resolved: **785** (open: 1)
 - Win rate: **5.0%** (95% CI: 3.7% to 6.7%)
-- Net P&L: **$-41.54**
-- Capital deployed: $11,775.00  -> ROI: **-0.35%**
-- Fees+slippage paid: $35.28
+- Net P&L: **$-41.58**
+- Capital deployed: $11,790.00  -> ROI: **-0.35%**
+- Fees+slippage paid: $35.33
 
 ## Losers (negative net P&L, ≥5 trades)
-- **nsigma_fade** — 355 trades, WR 5.6%, net $-18.00
+- **nsigma_fade** — 356 trades, WR 5.6%, net $-18.04
 - **breakout_donchian** — 291 trades, WR 2.8%, net $-15.95
 - **momentum_ema_cross** — 138 trades, WR 8.0%, net $-7.59
 
@@ -18,8 +18,8 @@ As of: 2026-08-12T23:10:22.154393+00:00
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
 | momentum_ema_cross | 138 | 8.0% | 4.5% | $-7.59 | -0.37% | $2,070.00 |
-| breakout_donchian | 291 | 2.8% | 1.4% | $-15.95 | -0.37% | $4,365.00 |
-| nsigma_fade | 355 | 5.6% | 3.7% | $-18.00 | -0.34% | $5,340.00 |
+| breakout_donchian | 291 | 2.8% | 1.4% | $-15.95 | -0.36% | $4,380.00 |
+| nsigma_fade | 356 | 5.6% | 3.7% | $-18.04 | -0.34% | $5,340.00 |
 
 ## By regime
 | key | n | WR | WLB | net P&L | ROI | deployed |
@@ -28,13 +28,13 @@ As of: 2026-08-12T23:10:22.154393+00:00
 | trending_up | 77 | 6.5% | 2.8% | $-4.12 | -0.36% | $1,155.00 |
 | high_vol | 97 | 10.3% | 5.7% | $-5.78 | -0.40% | $1,455.00 |
 | mixed | 150 | 12.0% | 7.7% | $-7.41 | -0.33% | $2,250.00 |
-| ranging | 433 | 1.1% | 0.5% | $-22.90 | -0.35% | $6,510.00 |
+| ranging | 434 | 1.1% | 0.5% | $-22.94 | -0.35% | $6,525.00 |
 
 ## By side
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
 | SHORT | 187 | 6.4% | 3.7% | $-9.30 | -0.33% | $2,805.00 |
-| LONG | 597 | 4.5% | 3.1% | $-32.24 | -0.36% | $8,970.00 |
+| LONG | 598 | 4.5% | 3.1% | $-32.28 | -0.36% | $8,985.00 |
 
 ## By day
 | key | n | WR | WLB | net P&L | ROI | deployed |
