@@ -55,7 +55,7 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
 </style>
 </head><body>
 <h1>btcbot <span class="badge">PAPER</span> </h1>
-<div class="sub">Generated 2026-08-16 23:18 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
+<div class="sub">Generated 2026-08-16 23:45 UTC · auto-refresh 60s · active strategies: nsigma_fade, breakout_donchian, momentum_ema_cross</div>
 
 <nav>
   <button id="btn-overview" onclick="showTab('overview')">Overview</button>
@@ -65,7 +65,7 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
   <button id="btn-strategies" onclick="showTab('strategies')">Strategies</button>
   <button id="btn-ladder" onclick="showTab('ladder')">Ladder</button>
   <button id="btn-discover" onclick="showTab('discover')">Discovery (2704)</button>
-  <button id="btn-patterns" onclick="showTab('patterns')">Patterns (57420)</button>
+  <button id="btn-patterns" onclick="showTab('patterns')">Patterns (57484)</button>
   <button id="btn-gates" onclick="showTab('gates')">Gates</button>
 </nav>
 
@@ -200,21 +200,21 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>45</td>
           <td class="pos">40</td>
           <td>17</td>
-          <td>155</td>
+          <td>156</td>
           <td>80</td>
         </tr>
         <tr>
           <td>momentum_ema_cross</td>
           <td>45</td>
-          <td class="pos">22</td>
-          <td>8</td>
+          <td class="pos">21</td>
+          <td>7</td>
           <td>82</td>
           <td>25</td>
         </tr>
         <tr>
           <td>nsigma_fade</td>
           <td>45</td>
-          <td class="pos">31</td>
+          <td class="pos">30</td>
           <td>17</td>
           <td>124</td>
           <td>94</td>
@@ -228,12 +228,12 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
     <div class="card">
       <h2>Bottom line</h2>
       <div class="kv">
-        <b>Trades resolved</b><div>614 (open: 0)</div>
+        <b>Trades resolved</b><div>612 (open: 0)</div>
         <b>Win rate</b><div>2.1% (95% CI: 1.2% – 3.6%)</div>
-        <b>Net P&L</b><div class="neg"><b>-$31.95</b></div>
-        <b>Capital deployed</b><div>$9,210.00</div>
+        <b>Net P&L</b><div class="neg"><b>-$31.82</b></div>
+        <b>Capital deployed</b><div>$9,180.00</div>
         <b>ROI</b><div class="neg">-0.35%</div>
-        <b>Fees+slip paid</b><div>$27.63</div>
+        <b>Fees+slip paid</b><div>$27.54</div>
       </div>
     </div>
     <div class="card">
@@ -257,20 +257,20 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
           <td>$4,110.00</td>
         </tr><tr>
           <td>breakout_donchian</td>
-          <td>241</td>
+          <td>240</td>
           <td>1.2%</td>
           <td>0.4%</td>
-          <td class="neg">-$12.49</td>
+          <td class="neg">-$12.43</td>
           <td>-0.35%</td>
-          <td>$3,615.00</td>
+          <td>$3,600.00</td>
         </tr><tr>
           <td>momentum_ema_cross</td>
-          <td>99</td>
+          <td>98</td>
           <td>2.0%</td>
           <td>0.6%</td>
-          <td class="neg">-$5.32</td>
+          <td class="neg">-$5.25</td>
           <td>-0.36%</td>
-          <td>$1,485.00</td>
+          <td>$1,470.00</td>
         </tr></tbody>
       </table>
     </div>
@@ -280,20 +280,20 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
         <thead><tr><th>strategy</th><th>n</th><th>WR</th><th>WLB</th><th>net P&L</th><th>ROI</th><th>deployed</th></tr></thead>
         <tbody><tr>
           <td>momentum_ema_cross</td>
-          <td>99</td>
+          <td>98</td>
           <td>2.0%</td>
           <td>0.6%</td>
-          <td class="neg">-$5.32</td>
+          <td class="neg">-$5.25</td>
           <td>-0.36%</td>
-          <td>$1,485.00</td>
+          <td>$1,470.00</td>
         </tr><tr>
           <td>breakout_donchian</td>
-          <td>241</td>
+          <td>240</td>
           <td>1.2%</td>
           <td>0.4%</td>
-          <td class="neg">-$12.49</td>
+          <td class="neg">-$12.43</td>
           <td>-0.35%</td>
-          <td>$3,615.00</td>
+          <td>$3,600.00</td>
         </tr><tr>
           <td>nsigma_fade</td>
           <td>274</td>
@@ -5306,6 +5306,13 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
         <thead><tr><th>when</th><th>strategy</th><th>symbol</th><th>gate</th><th>reason</th></tr></thead>
         <tbody>
         <tr>
+          <td>2026-08-16 23:44</td>
+          <td>breakout_donchian</td>
+          <td>BTC/USDT</td>
+          <td>daily_spend</td>
+          <td>spent=240.00 budget=240.00</td>
+        </tr>
+        <tr>
           <td>2026-08-16 22:50</td>
           <td>nsigma_fade</td>
           <td>BTC/USDT</td>
@@ -5994,13 +6001,6 @@ nav button.active{background:#1f3a5f;border-color:#1f6feb;color:#cce0ff}
         <tr>
           <td>2026-08-15 08:38</td>
           <td>nsigma_fade</td>
-          <td>BTC/USDT</td>
-          <td>per_symbol_cap</td>
-          <td>3</td>
-        </tr>
-        <tr>
-          <td>2026-08-15 07:33</td>
-          <td>momentum_ema_cross</td>
           <td>BTC/USDT</td>
           <td>per_symbol_cap</td>
           <td>3</td>
