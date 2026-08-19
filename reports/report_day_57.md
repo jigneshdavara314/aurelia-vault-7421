@@ -1,40 +1,40 @@
 # Edge report (last 57 days)
 
-As of: 2026-08-19T17:31:25.642736+00:00
+As of: 2026-08-19T17:59:21.940291+00:00
 
 ## Total
-- Trades resolved: **1012** (open: 1)
-- Win rate: **4.5%** (95% CI: 3.3% to 5.9%)
-- Net P&L: **$-52.96**
-- Capital deployed: $15,195.00  -> ROI: **-0.35%**
-- Fees+slippage paid: $45.54
+- Trades resolved: **1013** (open: 1)
+- Win rate: **4.4%** (95% CI: 3.3% to 5.9%)
+- Net P&L: **$-52.88**
+- Capital deployed: $15,210.00  -> ROI: **-0.35%**
+- Fees+slippage paid: $45.59
 
 ## Losers (negative net P&L, ≥5 trades)
-- **nsigma_fade** — 451 trades, WR 4.7%, net $-23.05
+- **nsigma_fade** — 452 trades, WR 4.7%, net $-22.96
 - **breakout_donchian** — 379 trades, WR 2.9%, net $-19.94
 - **momentum_ema_cross** — 182 trades, WR 7.1%, net $-9.98
 
 ## By strategy
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
-| momentum_ema_cross | 182 | 7.1% | 4.2% | $-9.98 | -0.37% | $2,730.00 |
+| momentum_ema_cross | 182 | 7.1% | 4.2% | $-9.98 | -0.36% | $2,745.00 |
 | breakout_donchian | 379 | 2.9% | 1.6% | $-19.94 | -0.35% | $5,685.00 |
-| nsigma_fade | 451 | 4.7% | 3.1% | $-23.05 | -0.34% | $6,780.00 |
+| nsigma_fade | 452 | 4.7% | 3.1% | $-22.96 | -0.34% | $6,780.00 |
 
 ## By regime
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
 | trending_down | 30 | 3.3% | 0.6% | $-1.48 | -0.33% | $450.00 |
 | trending_up | 90 | 5.6% | 2.4% | $-4.82 | -0.36% | $1,350.00 |
-| high_vol | 134 | 11.9% | 7.5% | $-7.63 | -0.38% | $2,025.00 |
-| mixed | 183 | 9.8% | 6.3% | $-9.02 | -0.33% | $2,745.00 |
+| high_vol | 135 | 11.8% | 7.4% | $-7.55 | -0.37% | $2,025.00 |
+| mixed | 183 | 9.8% | 6.3% | $-9.02 | -0.33% | $2,760.00 |
 | ranging | 575 | 0.9% | 0.4% | $-30.01 | -0.35% | $8,625.00 |
 
 ## By side
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
-| SHORT | 238 | 5.5% | 3.2% | $-12.06 | -0.34% | $3,585.00 |
-| LONG | 774 | 4.1% | 2.9% | $-40.90 | -0.35% | $11,610.00 |
+| SHORT | 239 | 5.4% | 3.2% | $-11.98 | -0.33% | $3,585.00 |
+| LONG | 774 | 4.1% | 2.9% | $-40.90 | -0.35% | $11,625.00 |
 
 ## By day
 | key | n | WR | WLB | net P&L | ROI | deployed |
