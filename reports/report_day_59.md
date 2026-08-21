@@ -1,25 +1,25 @@
 # Edge report (last 59 days)
 
-As of: 2026-08-21T18:59:56.436223+00:00
+As of: 2026-08-21T19:31:38.839824+00:00
 
 ## Total
-- Trades resolved: **1082** (open: 1)
-- Win rate: **6.0%** (95% CI: 4.7% to 7.6%)
-- Net P&L: **$-56.22**
-- Capital deployed: $16,245.00  -> ROI: **-0.35%**
-- Fees+slippage paid: $48.69
+- Trades resolved: **1083** (open: 1)
+- Win rate: **6.1%** (95% CI: 4.8% to 7.7%)
+- Net P&L: **$-56.19**
+- Capital deployed: $16,260.00  -> ROI: **-0.35%**
+- Fees+slippage paid: $48.74
 
 ## Losers (negative net P&L, ≥5 trades)
-- **nsigma_fade** — 478 trades, WR 5.4%, net $-24.73
+- **nsigma_fade** — 479 trades, WR 5.6%, net $-24.70
 - **breakout_donchian** — 389 trades, WR 3.9%, net $-20.38
 - **momentum_ema_cross** — 215 trades, WR 11.2%, net $-11.11
 
 ## By strategy
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
-| momentum_ema_cross | 215 | 11.2% | 7.6% | $-11.11 | -0.34% | $3,225.00 |
+| momentum_ema_cross | 215 | 11.2% | 7.6% | $-11.11 | -0.34% | $3,240.00 |
 | breakout_donchian | 389 | 3.9% | 2.4% | $-20.38 | -0.35% | $5,835.00 |
-| nsigma_fade | 478 | 5.4% | 3.7% | $-24.73 | -0.34% | $7,185.00 |
+| nsigma_fade | 479 | 5.6% | 3.9% | $-24.70 | -0.34% | $7,185.00 |
 
 ## By regime
 | key | n | WR | WLB | net P&L | ROI | deployed |
@@ -28,13 +28,13 @@ As of: 2026-08-21T18:59:56.436223+00:00
 | trending_up | 108 | 10.2% | 5.8% | $-5.77 | -0.36% | $1,620.00 |
 | high_vol | 145 | 11.7% | 7.4% | $-8.27 | -0.38% | $2,175.00 |
 | mixed | 202 | 11.4% | 7.7% | $-9.64 | -0.32% | $3,030.00 |
-| ranging | 597 | 2.2% | 1.3% | $-31.06 | -0.35% | $8,970.00 |
+| ranging | 598 | 2.3% | 1.4% | $-31.03 | -0.35% | $8,985.00 |
 
 ## By side
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
 | SHORT | 260 | 5.8% | 3.5% | $-13.89 | -0.36% | $3,900.00 |
-| LONG | 822 | 6.1% | 4.6% | $-42.33 | -0.34% | $12,345.00 |
+| LONG | 823 | 6.2% | 4.7% | $-42.30 | -0.34% | $12,360.00 |
 
 ## By day
 | key | n | WR | WLB | net P&L | ROI | deployed |
