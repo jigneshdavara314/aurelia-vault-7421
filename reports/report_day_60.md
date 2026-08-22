@@ -1,6 +1,6 @@
 # Edge report (last 60 days)
 
-As of: 2026-08-22T15:19:41.809931+00:00
+As of: 2026-08-22T15:46:07.703360+00:00
 
 ## Total
 - Trades resolved: **1109** (open: 1)
