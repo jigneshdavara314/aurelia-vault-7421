@@ -1,24 +1,24 @@
 # Edge report (last 61 days)
 
-As of: 2026-08-23T18:27:29.010249+00:00
+As of: 2026-08-23T18:58:37.627292+00:00
 
 ## Total
-- Trades resolved: **1147** (open: 1)
+- Trades resolved: **1148** (open: 2)
 - Win rate: **6.7%** (95% CI: 5.4% to 8.3%)
-- Net P&L: **$-59.41**
-- Capital deployed: $17,220.00  -> ROI: **-0.34%**
-- Fees+slippage paid: $51.62
+- Net P&L: **$-59.45**
+- Capital deployed: $17,250.00  -> ROI: **-0.34%**
+- Fees+slippage paid: $51.66
 
 ## Losers (negative net P&L, ≥5 trades)
 - **nsigma_fade** — 514 trades, WR 6.6%, net $-26.45
 - **breakout_donchian** — 408 trades, WR 4.4%, net $-21.15
-- **momentum_ema_cross** — 225 trades, WR 11.1%, net $-11.80
+- **momentum_ema_cross** — 226 trades, WR 11.1%, net $-11.84
 
 ## By strategy
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
-| momentum_ema_cross | 225 | 11.1% | 7.6% | $-11.80 | -0.35% | $3,390.00 |
-| breakout_donchian | 408 | 4.4% | 2.8% | $-21.15 | -0.35% | $6,120.00 |
+| momentum_ema_cross | 226 | 11.1% | 7.6% | $-11.84 | -0.35% | $3,405.00 |
+| breakout_donchian | 408 | 4.4% | 2.8% | $-21.15 | -0.34% | $6,135.00 |
 | nsigma_fade | 514 | 6.6% | 4.8% | $-26.45 | -0.34% | $7,710.00 |
 
 ## By regime
@@ -27,14 +27,14 @@ As of: 2026-08-23T18:27:29.010249+00:00
 | trending_down | 32 | 3.1% | 0.5% | $-1.56 | -0.32% | $480.00 |
 | trending_up | 115 | 11.3% | 6.7% | $-6.17 | -0.36% | $1,725.00 |
 | high_vol | 152 | 12.5% | 8.2% | $-8.61 | -0.38% | $2,280.00 |
-| mixed | 213 | 11.3% | 7.7% | $-10.28 | -0.32% | $3,210.00 |
-| ranging | 635 | 3.1% | 2.1% | $-32.78 | -0.34% | $9,525.00 |
+| mixed | 214 | 11.2% | 7.6% | $-10.32 | -0.32% | $3,210.00 |
+| ranging | 635 | 3.1% | 2.1% | $-32.78 | -0.34% | $9,555.00 |
 
 ## By side
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
 | SHORT | 279 | 7.2% | 4.7% | $-14.84 | -0.35% | $4,185.00 |
-| LONG | 868 | 6.6% | 5.1% | $-44.57 | -0.34% | $13,035.00 |
+| LONG | 869 | 6.6% | 5.1% | $-44.61 | -0.34% | $13,065.00 |
 
 ## By day
 | key | n | WR | WLB | net P&L | ROI | deployed |
