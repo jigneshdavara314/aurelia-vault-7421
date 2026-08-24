@@ -1,23 +1,23 @@
 # Edge report (last 62 days)
 
-As of: 2026-08-24T22:53:56.424253+00:00
+As of: 2026-08-24T23:21:29.220027+00:00
 
 ## Total
-- Trades resolved: **1187** (open: 1)
-- Win rate: **7.4%** (95% CI: 6.1% to 9.0%)
-- Net P&L: **$-61.12**
-- Capital deployed: $17,820.00  -> ROI: **-0.34%**
-- Fees+slippage paid: $53.42
+- Trades resolved: **1188** (open: 1)
+- Win rate: **7.4%** (95% CI: 6.0% to 9.0%)
+- Net P&L: **$-61.20**
+- Capital deployed: $17,835.00  -> ROI: **-0.34%**
+- Fees+slippage paid: $53.46
 
 ## Losers (negative net P&L, ≥5 trades)
 - **nsigma_fade** — 533 trades, WR 7.7%, net $-27.02
 - **breakout_donchian** — 416 trades, WR 4.6%, net $-21.73
-- **momentum_ema_cross** — 238 trades, WR 11.8%, net $-12.37
+- **momentum_ema_cross** — 239 trades, WR 11.7%, net $-12.45
 
 ## By strategy
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
-| momentum_ema_cross | 238 | 11.8% | 8.3% | $-12.37 | -0.35% | $3,585.00 |
+| momentum_ema_cross | 239 | 11.7% | 8.2% | $-12.45 | -0.35% | $3,600.00 |
 | breakout_donchian | 416 | 4.6% | 2.9% | $-21.73 | -0.35% | $6,240.00 |
 | nsigma_fade | 533 | 7.7% | 5.7% | $-27.02 | -0.34% | $7,995.00 |
 
@@ -28,13 +28,13 @@ As of: 2026-08-24T22:53:56.424253+00:00
 | trending_up | 124 | 13.7% | 8.7% | $-6.57 | -0.35% | $1,860.00 |
 | high_vol | 162 | 14.2% | 9.7% | $-8.87 | -0.36% | $2,430.00 |
 | mixed | 225 | 11.1% | 7.6% | $-11.03 | -0.33% | $3,375.00 |
-| ranging | 643 | 3.4% | 2.3% | $-33.00 | -0.34% | $9,660.00 |
+| ranging | 644 | 3.4% | 2.3% | $-33.08 | -0.34% | $9,675.00 |
 
 ## By side
 | key | n | WR | WLB | net P&L | ROI | deployed |
 |---|---:|---:|---:|---:|---:|---:|
 | SHORT | 291 | 8.6% | 5.9% | $-15.19 | -0.35% | $4,365.00 |
-| LONG | 896 | 7.0% | 5.5% | $-45.93 | -0.34% | $13,455.00 |
+| LONG | 897 | 7.0% | 5.5% | $-46.01 | -0.34% | $13,470.00 |
 
 ## By day
 | key | n | WR | WLB | net P&L | ROI | deployed |
