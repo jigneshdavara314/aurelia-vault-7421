@@ -1,31 +1,33 @@
 {
-  "ts": 1795385118187,
-  "today_utc": "2026-11-22",
-  "score": 10,
+  "ts": 1795402045537,
+  "today_utc": "2026-11-23",
+  "score": 9,
   "max_score": 10,
   "failures": [],
-  "warnings": [],
+  "warnings": [
+    "patterns: no new pattern names added today (composite miner may be stale)"
+  ],
   "metrics": {
-    "patterns_total": 112128,
-    "patterns_last_run_day": "2026-11-22",
-    "patterns_new_today": 6,
+    "patterns_total": 112202,
+    "patterns_last_run_day": "2026-11-23",
+    "patterns_new_today": 0,
     "patterns_cumulative_new": 2810,
-    "patterns_day_seed": 150,
+    "patterns_day_seed": 151,
     "patterns_by_tier": {
       "trial": 16,
       "active": 0,
-      "candidate": 112112
+      "candidate": 112186
     },
     "discoveries_total": 2704,
-    "discoveries_last_run_day": "2026-11-22",
-    "discoveries_days_run_count": 149,
+    "discoveries_last_run_day": "2026-11-23",
+    "discoveries_days_run_count": 150,
     "discoveries_retired": 1004,
     "signal_events_24h": 17,
-    "signals_emitted_24h": 9,
+    "signals_emitted_24h": 7,
     "trades_opened_24h": 5,
     "emissions_by_strategy_7d": {
       "breakout_donchian": 7,
-      "momentum_ema_cross": 10,
+      "momentum_ema_cross": 9,
       "nsigma_fade": 17
     },
     "ladder_cells_total": 4,
